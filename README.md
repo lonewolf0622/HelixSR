@@ -12,11 +12,9 @@ HelixSR is an independent, unofficial project and is **not affiliated with or en
 
 **Version 1.2.0.** For AMD RDNA 1 and newer GPUs. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV) in an FSR 3.1 game; other GPUs, drivers and games are untested.
 
-## Source availability and license scope
+## License and source
 
-**The implementation source and build scripts for the release DLL are not currently included in this repository's `main` branch.** The checked-in files provide documentation, configuration and license notices; they are not a complete source distribution of the upscaler. See [SOURCE.md](SOURCE.md).
-
-The Apache-2.0 notice applies to HelixSR's original code. It does not mean that this code has already been published. **Since 1.2.0 the HelixSR download contains no NVIDIA weights or NVIDIA-derived kernels:** the setup builds them on your PC from NVIDIA's own DLSS DLL (see [Setup](#setup-once-per-pc)). AMD FidelityFX components retain their MIT license. The setup downloads Microsoft's DirectX Shader Compiler, Python and numpy from their official sources; they are not included in the HelixSR download. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+HelixSR is free to use under the **HelixSR Freeware License** (`LICENSE`). Its source code is not published. The setup scripts (`helixsr-setup.*` and the `setup` folder) are licensed under Apache-2.0 (`LICENSE-APACHE-2.0`). **The HelixSR download contains no NVIDIA weights or NVIDIA-derived kernels:** the setup builds them on your PC from NVIDIA's own DLSS DLL (see [Setup](#setup-once-per-pc)), and those files stay NVIDIA's property. AMD FidelityFX components retain their MIT license. The setup downloads Microsoft's DirectX Shader Compiler, Python and numpy from their official sources; they are not included in the HelixSR download. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [SOURCE.md](SOURCE.md).
 
 ## How the hybrid works
 
@@ -142,4 +140,4 @@ DLSS and associated NVIDIA technologies are trademarks and intellectual property
 
 FidelityFX and FSR are trademarks of Advanced Micro Devices, Inc. FidelityFX components used by HelixSR are subject to their respective AMD licenses; see `THIRD_PARTY_NOTICES.md`.
 
-HelixSR's original source code is licensed under the Apache License 2.0. See `LICENSE` for details. This does not extend Apache-2.0 to NVIDIA's components described above. Source availability is separate from license scope; see [SOURCE.md](SOURCE.md).
+HelixSR is licensed under the HelixSR Freeware License (`LICENSE`); its setup scripts are licensed under the Apache License 2.0 (`LICENSE-APACHE-2.0`). Neither license extends to NVIDIA's components described above. The source code is not published; see [SOURCE.md](SOURCE.md).

@@ -49,9 +49,8 @@ The setup downloads, from their official sources and checked by SHA-256, and onl
 - Python (python.org on Windows; on Linux the system's, or python-build-standalone) under the PSF license;
 - numpy (PyPI) under the BSD license.
 
-## Source availability
+## License of HelixSR itself
 
-The DLL implementation source and build scripts are not currently included
-in the repository's `main` branch. See [SOURCE.md](SOURCE.md) for the
-publication status and the distinction between source availability and
-license scope.
+HelixSR is licensed under the HelixSR Freeware License (`LICENSE`). Its setup scripts (`helixsr-setup.*` and the `setup`
+folder) are licensed under the Apache License 2.0 (`LICENSE-APACHE-2.0`). The source code of the HelixSR DLL is not
+published; see [SOURCE.md](SOURCE.md).
