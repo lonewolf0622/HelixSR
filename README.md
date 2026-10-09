@@ -30,8 +30,8 @@ Since v1.1.0, packed FP16 arithmetic, accumulation and rounding choices improve 
 
 ## Changes
 
-- **1.4.3:** returns to the 1.3.0 code. 1.4.0-1.4.2 caused ghosting and smearing on RDNA 3 GPUs under Windows that we could not reproduce yet, so this release is HelixSR 1.3.0 again (identical DLL code and setup; only the version number changed). Not included until that is solved: QSSM / PRSM, the one-file DLL and the installer.
-  - **Updating from 1.4.x:** extract 1.4.3 into a new folder, run its setup, and install by hand (below): copy `amd_fidelityfx_dx12.dll` **and** the two network files `helixsr_weights.bin` and `helixsr_kernels.pak` next to it in each game, replacing HelixSR's 1.4.x DLL. Keep the game's `*.original.dll` backup.
+- **1.4.3:** returns to the 1.3.0 code. 1.4.0-1.4.2 caused ghosting and smearing on RDNA 3 GPUs under Windows that we could not reproduce yet, so this release is HelixSR 1.3.0 again (identical DLL code and setup; only the version number changed). Not included until that is solved: QSSM / PRSM and the one-file DLL. The installer from 1.4.x is included and copies the DLL with its two network files.
+  - **Updating from 1.4.x:** extract 1.4.3 into a new folder, run its setup, then run `helixsr-install` and pick your games: games that have HelixSR are updated in place (DLL and network files).
 - **1.3.0:** faster, and new GPU support. **Re-run the setup after updating** (the kernel file format changed).
   - **Ultra Performance about 30% faster** at the same image quality: the network outputs twice the render size and a final pass scales to the screen (`[Upscaling] NetworkResolution`). 4K 3.40 -> 2.16 ms, 1440p 1.63 -> 1.15 ms, 1080p 1.09 -> 0.75 ms. `NetworkResolution = fast` does the same for Performance (4K 3.50 -> 2.71 ms), a little softer.
   - Render sizes just under a 1.5x ratio (games that round up, e.g. 1707x960 for 1440p) use the faster output kernel: 1440p Quality 2.48 -> 1.73 ms. Two small network layers now spread across more of the GPU: 1080p Quality 1.15 -> 1.13 ms.
@@ -72,13 +72,16 @@ Wherever you install HelixSR (below), copy `helixsr_weights.bin` and `helixsr_ke
 
 ## Install (per game)
 
+**With the installer:** run `./helixsr-install.sh` (Linux) or double-click `helixsr-install.bat` (Windows) in the HelixSR folder, after the setup. It finds your Steam libraries (also Flatpak Steam), lists the games that ship an FSR 3.1 DLL and installs HelixSR into the ones you type: the game's DLL is kept as `*.original.dll`, and HelixSR's DLL is copied in its place with `helixsr_weights.bin` and `helixsr_kernels.pak`. `u` and a number uninstalls. Commands: `list`, `install 2 5`, `uninstall 2`, `install-all`, `uninstall-all`; `--folder <game folder>` for games outside Steam. Close the games first. In the game, select **AMD FSR** as the upscaler.
+
+**By hand:**
 1. Close the game and find its FSR 3.1 upscaler DLL. It is named either `amd_fidelityfx_upscaler_dx12.dll` (often under `Engine/Plugins/.../ThirdParty/Win64` in Unreal Engine games) or `amd_fidelityfx_dx12.dll`.
 2. Rename the game's file by inserting `.original` before `.dll`, for example `amd_fidelityfx_upscaler_dx12.dll` -> `amd_fidelityfx_upscaler_dx12.original.dll`. Keep it: it is your backup, and for `amd_fidelityfx_dx12.dll` HelixSR forwards frame generation to `amd_fidelityfx_dx12.original.dll`.
 3. Copy HelixSR's `amd_fidelityfx_dx12.dll` into the same folder under the game's original file name, together with `helixsr_weights.bin` and `helixsr_kernels.pak` from the setup.
 4. Optional: copy `helixsr.ini` next to it (every setting has a default).
 5. Start the game normally (no launch options needed) and select **AMD FSR** as the upscaler.
 
-To uninstall, delete HelixSR's file and rename the `.original` file back.
+To uninstall, delete HelixSR's file and the two network files, and rename the `.original` file back.
 
 ## Using with OptiScaler (DLSS, XeSS and FSR 2 / 3.0 games)
 
