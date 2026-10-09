@@ -10,7 +10,7 @@ The goal is to help gamers get better image quality from the hardware they alrea
 
 HelixSR is an independent, unofficial project and is **not affiliated with or endorsed by NVIDIA or AMD**.
 
-**Version 1.4.1.** For AMD RDNA 1 and newer GPUs (Radeon Vega and Radeon VII are not supported yet). Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV) in an FSR 3.1 game. RDNA 3 and newer use wave64 network shaders automatically; community testing on Windows (ROG Ally X) helped with that. Other GPUs, drivers and games are untested by us.
+**Version 1.4.2.** For AMD RDNA 1 and newer GPUs (Radeon Vega and Radeon VII are not supported yet). Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV) in an FSR 3.1 game. RDNA 3 and newer use wave64 network shaders automatically; community testing on Windows (ROG Ally X) helped with that. Other GPUs, drivers and games are untested by us.
 
 ## License and source
 
@@ -30,6 +30,7 @@ Since v1.1.0, packed FP16 arithmetic, accumulation and rounding choices improve 
 
 ## Changes
 
+- **1.4.2:** fixes ghosting and smearing that 1.4.0/1.4.1 caused in some games (reported on RDNA 3): the camera jitter sequence is back to NVIDIA's length, as in 1.3. The longer sequence of 1.4.0 (sharper still images in our tests) stays available as `[ModelE] JitterPhases = 3`. A new upscaler context (or a new output size) now always starts with fresh history, even when the game does not ask for a reset, and the all-zero texture the network reads when a game sends no reactive mask is now filled explicitly. Updating: run the 1.4.2 setup, then `helixsr-install` (it keeps your existing `helixsr.ini`; without a `JitterPhases` line the new default applies).
 - **1.4.1:** QSSM is faster: its final downscale pass was rewritten (separable, staged in shared memory), with the same image (largest difference 0.00075 after tonemapping). 1080p Quality: QSSM Light 2.19 -> 1.80 ms, QSSM Ultra 2.59 -> 2.00 ms; 1440p Quality: 3.55 -> 2.87 ms and 4.40 -> 3.35 ms (BC-250). A custom QSSM `ScreenScale` is now capped at 1.5x (the presets are 1.25x or less). Updating from 1.4.0: run the 1.4.1 setup (it builds the network into the new DLL), then `helixsr-install` updates your games. With `--separate-files`, copying the new DLL is enough (the network files did not change).
 - **1.4.0:** new quality and speed presets, a one-file DLL and an installer. **Re-run the setup after updating** (the network file format changed; the 1.3.0 files are refused with a message).
   - **QSSM (Quality Super-Sampled Mode):** the network outputs more than the screen and a final pass scales it down: cleaner edges and less shimmer, at a higher GPU cost. Presets from 1.025x to 1.25x the screen (`NetworkResolution = QSSM Min` ... `QSSM Ultra`). At 1.25x it had less error and 4-12% less flicker than NVIDIA's Model E at the screen size in our test scenes.
@@ -37,7 +38,7 @@ Since v1.1.0, packed FP16 arithmetic, accumulation and rounding choices improve 
   - **Ultra Performance:** `NetworkScale` sets the network size (default 2x the render size; 2.25 and 2.5 give 1620p and 1800p at 4K: more detail for more GPU time).
   - **One-file DLL and installer:** the setup now builds the network into `amd_fidelityfx_dx12.dll` itself, so a game needs one file. `helixsr-install` lists your Steam games with FSR 3.1, installs HelixSR into the ones you pick (keeping the game's DLL as `*.original.dll`) and puts it back on uninstall.
   - **Fixes:** games with dynamic resolution could crash in 1.3.0 (its split k7/k11 kernels are removed); the game's reactive mask is passed to the network correctly when `UseReactiveMask = true` (off by default, as before).
-  - **Sharper still images:** the camera jitter sequence is three times longer than NVIDIA's recommended length: 5-13% less error on still and slow scenes in our tests. 1080p Quality is 0.03 ms slower than 1.3.0 (1.13 -> 1.16 ms) after the split kernels were removed.
+  - **Sharper still images:** the camera jitter sequence is three times longer than NVIDIA's recommended length: 5-13% less error on still and slow scenes in our tests (back to NVIDIA's length by default in 1.4.2). 1080p Quality is 0.03 ms slower than 1.3.0 (1.13 -> 1.16 ms) after the split kernels were removed.
 - **1.3.0:** faster, and new GPU support. **Re-run the setup after updating** (the kernel file format changed).
   - **Ultra Performance about 30% faster** at the same image quality: the network outputs twice the render size and a final pass scales to the screen (`[Upscaling] NetworkResolution`). 4K 3.40 -> 2.16 ms, 1440p 1.63 -> 1.15 ms, 1080p 1.09 -> 0.75 ms. `NetworkResolution = fast` does the same for Performance (4K 3.50 -> 2.71 ms), a little softer.
   - Render sizes just under a 1.5x ratio (games that round up, e.g. 1707x960 for 1440p) use the faster output kernel: 1440p Quality 2.48 -> 1.73 ms. Two small network layers now spread across more of the GPU: 1080p Quality 1.15 -> 1.13 ms.
@@ -126,6 +127,7 @@ OptiScaler's "FFX Upscaler" menu lists HelixSR as **FSR HelixSR (3.1.5)** (OptiS
 | `[Upscaling]` | `ScreenScale` | (preset) | Any QSSM / PRSM scale instead of the preset's, e.g. `1.15` (QSSM at most 1.5) |
 | `[Upscaling]` | `NetworkScale` | `2.0` | Ultra Performance in `auto`: network output / render size; `2.25` and `2.5` give 1620p and 1800p at 4K |
 | `[ModelE]` | `UseReactiveMask` | `false` | Pass the game's reactive mask (effects, particles) to the network |
+| `[ModelE]` | `JitterPhases` | `1` | Camera jitter sequence length, x NVIDIA's (8 x ratio squared). `3`: sharper still images, but some games ghost |
 | `[Compatibility]` | `WaveSize` | `auto` | Shader wave size. `auto`: wave32 on RDNA 1/2; on RDNA 3, 3.5 and 4 the network shaders run at wave64 (HelixSR's own convolution kernels stay wave32). `32` or `64` forces one. `helixsr.log` shows the choice (`wave size: ...`) |
 | `[Forwarding]` | `Dll` | (auto) | DLL for FidelityFX effects other than upscaling (frame generation): `amd_fidelityfx_dx12.original.dll` if present, else `amd_fidelityfx_framegeneration_dx12.dll` |
 | `[Forwarding]` | `UpscalerDll` | (empty) | Optional second FidelityFX upscaler DLL (e.g. AMD's with FSR 4), listed after HelixSR; a name without a folder is looked up next to HelixSR |
