@@ -10,7 +10,7 @@ The goal is to help gamers get better image quality from the hardware they alrea
 
 HelixSR is an independent, unofficial project and is **not affiliated with or endorsed by NVIDIA or AMD**.
 
-**Version 1.4.0.** For AMD RDNA 1 and newer GPUs (Radeon Vega and Radeon VII are not supported yet). Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV) in an FSR 3.1 game. RDNA 3 and newer use wave64 network shaders automatically; community testing on Windows (ROG Ally X) helped with that. Other GPUs, drivers and games are untested by us.
+**Version 1.4.1.** For AMD RDNA 1 and newer GPUs (Radeon Vega and Radeon VII are not supported yet). Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV) in an FSR 3.1 game. RDNA 3 and newer use wave64 network shaders automatically; community testing on Windows (ROG Ally X) helped with that. Other GPUs, drivers and games are untested by us.
 
 ## License and source
 
@@ -30,6 +30,7 @@ Since v1.1.0, packed FP16 arithmetic, accumulation and rounding choices improve 
 
 ## Changes
 
+- **1.4.1:** QSSM is faster: its final downscale pass was rewritten (separable, staged in shared memory), with the same image (largest difference 0.00075 after tonemapping). 1080p Quality: QSSM Light 2.19 -> 1.80 ms, QSSM Ultra 2.59 -> 2.00 ms; 1440p Quality: 3.55 -> 2.87 ms and 4.40 -> 3.35 ms (BC-250). A custom QSSM `ScreenScale` is now capped at 1.5x (the presets are 1.25x or less). Updating from 1.4.0: run the 1.4.1 setup (it builds the network into the new DLL), then `helixsr-install` updates your games. With `--separate-files`, copying the new DLL is enough (the network files did not change).
 - **1.4.0:** new quality and speed presets, a one-file DLL and an installer. **Re-run the setup after updating** (the network file format changed; the 1.3.0 files are refused with a message).
   - **QSSM (Quality Super-Sampled Mode):** the network outputs more than the screen and a final pass scales it down: cleaner edges and less shimmer, at a higher GPU cost. Presets from 1.025x to 1.25x the screen (`NetworkResolution = QSSM Min` ... `QSSM Ultra`). At 1.25x it had less error and 4-12% less flicker than NVIDIA's Model E at the screen size in our test scenes.
   - **PRSM (Performance Reduced-Sample Mode):** the network outputs less than the screen and the final pass scales it up: faster, softer. Presets from 0.95x to 0.70x the screen (`PRSM Light` ... `PRSM Extreme`). Example: 4K Performance 3.54 -> 2.74 ms at 0.75x.
@@ -122,7 +123,7 @@ OptiScaler's "FFX Upscaler" menu lists HelixSR as **FSR HelixSR (3.1.5)** (OptiS
 | `[ModelE]` | `InvertJitter`, `InvertMotionVectors` | `false` | For games whose jitter or motion vectors come out mirrored |
 | `[Log]` | `Enabled` | `true` | Writes `helixsr.log` next to the DLL |
 | `[Upscaling]` | `NetworkResolution` | `auto` | Size the network works at. `auto`: as DLSS, except Ultra Performance, where the network outputs `NetworkScale` x the render size and a final pass scales to the screen. `QSSM Ultra / High / Balanced / Light / Eco / Min` (1.25 / 1.20 / 1.15 / 1.10 / 1.05 / 1.025x the screen): supersampling, cleaner and more costly; not at Ultra Performance. `PRSM Light / Quality / Balanced / Performance / Ultra / Extreme` (0.95 / 0.90 / 0.85 / 0.80 / 0.75 / 0.70x the screen): faster, softer; never below 1.5x the render size (smaller would be slower). `full`: always the screen size. QSSM and PRSM change only upscaling modes; native (DLAA) stays at the screen size. Only with render-resolution motion vectors |
-| `[Upscaling]` | `ScreenScale` | (preset) | Any QSSM / PRSM scale instead of the preset's, e.g. `1.15` |
+| `[Upscaling]` | `ScreenScale` | (preset) | Any QSSM / PRSM scale instead of the preset's, e.g. `1.15` (QSSM at most 1.5) |
 | `[Upscaling]` | `NetworkScale` | `2.0` | Ultra Performance in `auto`: network output / render size; `2.25` and `2.5` give 1620p and 1800p at 4K |
 | `[ModelE]` | `UseReactiveMask` | `false` | Pass the game's reactive mask (effects, particles) to the network |
 | `[Compatibility]` | `WaveSize` | `auto` | Shader wave size. `auto`: wave32 on RDNA 1/2; on RDNA 3, 3.5 and 4 the network shaders run at wave64 (HelixSR's own convolution kernels stay wave32). `32` or `64` forces one. `helixsr.log` shows the choice (`wave size: ...`) |
@@ -133,12 +134,12 @@ With sharpening off (the default), the network writes the game's output directly
 
 ## Performance
 
-GPU time per upscaled frame, measured on one example GPU, the **BC-250 (RDNA 1-class) at 2000 MHz, sharpening off**, v1.4.0. Faster GPUs can afford the larger QSSM presets.
+GPU time per upscaled frame, measured on one example GPU, the **BC-250 (RDNA 1-class) at 2000 MHz, sharpening off**, v1.4.1. Faster GPUs can afford the larger QSSM presets.
 
 | Output | Mode | auto | QSSM Ultra | PRSM |
 |---|---|---:|---:|---:|
-| 1920x1080 | Quality (1280x720) | 1.16 ms | 2.57 ms | (screen size) |
-| 2560x1440 | Quality (1707x960) | 1.76 ms | 4.38 ms | (screen size) |
+| 1920x1080 | Quality (1280x720) | 1.16 ms | 2.00 ms | (screen size) |
+| 2560x1440 | Quality (1707x960) | 1.76 ms | 3.35 ms | (screen size) |
 | 3840x2160 | Performance (1920x1080) | 3.54 ms | | 2.74 ms (PRSM Ultra) |
 | 3840x2160 | Ultra Performance (1280x720) | 2.20 ms; 2.62 ms with `NetworkScale = 2.25`, 3.06 ms with `2.5` | | |
 
