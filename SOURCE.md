@@ -5,8 +5,8 @@ The source code of the HelixSR DLL is **not published**. HelixSR is free to use 
 
 ## What is published
 
-- The release downloads (the DLL, documentation and settings file).
-- The setup scripts (`helixsr-setup.sh`, `helixsr-setup.ps1`, `helixsr-setup.bat` and the `setup` folder), licensed
+- The release downloads (the DLL and documentation).
+- The setup and install scripts (`helixsr-setup.*`, `helixsr-install.*` and the `setup` folder), licensed
   under the Apache License 2.0 (`LICENSE-APACHE-2.0`). They are plain text in every release.
 
 ## NVIDIA material
@@ -17,4 +17,4 @@ extends to NVIDIA's components.
 
 ## Third-party components
 
-AMD FidelityFX components retain their MIT license; see `THIRD_PARTY_NOTICES.md`.
+The AMD FidelityFX-derived Lanczos weights retain their MIT license; see `THIRD_PARTY_NOTICES.md`.

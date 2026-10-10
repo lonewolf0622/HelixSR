@@ -2,7 +2,7 @@
 
 ## AMD FidelityFX — MIT
 
-HelixSR includes the FidelityFX API headers and a port of the RCAS sharpening filter from AMD FidelityFX, under the
+HelixSR includes a Lanczos weight approximation derived from AMD FidelityFX, under the
 MIT license below.
 
 ```
@@ -54,3 +54,7 @@ The setup downloads, from their official sources and checked by SHA-256, and onl
 HelixSR is licensed under the HelixSR Freeware License (`LICENSE`). Its setup scripts (`helixsr-setup.*` and the `setup`
 folder) are licensed under the Apache License 2.0 (`LICENSE-APACHE-2.0`). The source code of the HelixSR DLL is not
 published; see [SOURCE.md](SOURCE.md).
+
+## OptiScaler — not included
+
+HelixSR is used through OptiScaler (github.com/OptiScaler/OptiScaler, GPL-3.0), which must already be installed in the game. OptiScaler is a separate project under its own license; it is not part of the HelixSR download and HelixSR does not modify it.
