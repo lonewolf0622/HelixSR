@@ -8,7 +8,7 @@ The goal is to help gamers get better image quality from the hardware they alrea
 
 HelixSR is an independent, unofficial project and is **not affiliated with or endorsed by NVIDIA or AMD**.
 
-**Version 1.5.0.** For AMD RDNA 1 and newer GPUs (Radeon Vega and Radeon VII are not supported yet). Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV, Proton) in a Direct3D 12 game with DLSS. RDNA 3 and newer use wave64 network shaders automatically. **Linux with Proton only for now: Windows is not supported yet** (see [Limitations](#limitations)). Other GPUs, drivers and games are untested by us.
+**Version 1.5.1.** For AMD RDNA 1 and newer GPUs (Radeon Vega and Radeon VII are not supported yet). Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV, Proton) in a Direct3D 12 game with DLSS. RDNA 3 and newer use wave64 network shaders automatically. **Linux with Proton only for now: Windows is not supported yet** (see [Limitations](#limitations)). Other GPUs, drivers and games are untested by us.
 
 ## What you need
 
@@ -33,18 +33,18 @@ HelixSR is free to use under the **HelixSR Freeware License** (`LICENSE`). Its s
 
 ## Setup (once per PC)
 
-HelixSR needs two network files, `helixsr_weights.bin` and `helixsr_kernels.pak`, next to its DLL. They are built on your PC from NVIDIA's DLSS DLL, which is NVIDIA's property and is therefore not included in the HelixSR download.
+HelixSR needs NVIDIA's network (weights and shaders). It is built on your PC from NVIDIA's DLSS DLL, which is NVIDIA's property and is therefore not included in the HelixSR download. The setup adds the network to `nvngx.dll`, so the result is **one file**.
 
 1. Extract the HelixSR release zip into a folder.
 2. Run the setup in that folder: `./helixsr-setup.sh`
-3. It asks to download NVIDIA's DLSS 310.7.0 DLL from NVIDIA's GitHub ([github.com/NVIDIA/DLSS](https://github.com/NVIDIA/DLSS), NVIDIA's license applies), builds the two network files next to `nvngx.dll` (wave32 and wave64 shaders; about 5 minutes) and deletes the DLL again.
+3. It asks to download NVIDIA's DLSS 310.7.0 DLL from NVIDIA's GitHub ([github.com/NVIDIA/DLSS](https://github.com/NVIDIA/DLSS), NVIDIA's license applies), builds the network (wave32 and wave64 shaders; about 5 minutes), appends it to `nvngx.dll` in the HelixSR folder and deletes NVIDIA's DLL again.
 
 What it needs, and how it gets it:
 - Python 3 with numpy. The script uses your system's, offers to install them with your distribution's package manager (pacman, apt, dnf, zypper), or downloads a portable Python into `~/.local/share/HelixSR` (read-only systems such as SteamOS, Bazzite, Silverblue). The shader compiler (Microsoft's DirectX Shader Compiler) is downloaded once from Microsoft's GitHub and runs through Proton, which you already have for your games.
 - Every download is pinned to an exact version and checked by SHA-256.
 - Already have DLSS 310.7.0 (or 310.2) from a game? Use it instead of the download: `./helixsr-setup.sh --dlss /path/to/nvngx_dlss.dll`.
 
-**The two network files contain NVIDIA's network: they are for your own PC, do not share or upload them.**
+**The `nvngx.dll` the setup makes contains NVIDIA's network: it is for your own PC, do not share or upload it.**
 
 **Updating HelixSR:** run the setup again after every update, then run the installer again; it updates the files in each game.
 
@@ -53,7 +53,7 @@ What it needs, and how it gets it:
 Run `./helixsr-install.sh` in the HelixSR folder, after the setup, with the game closed.
 
 1. It finds your Steam libraries (also Flatpak Steam) and lists the games that already have OptiScaler. Type the numbers of the games to install into. Commands: `list`, `install 2 5`, `uninstall 2`, `install-all`, `uninstall-all`; `--folder <game folder>` for games outside Steam.
-2. For each game it copies `nvngx.dll`, `helixsr_weights.bin` and `helixsr_kernels.pak` into a `HelixSR` folder next to `OptiScaler.ini`, and changes two settings in that `OptiScaler.ini`: `Dx12Upscaler = dlss` and `NvngxPath = <full path of that nvngx.dll>`. The previous values are saved, and your original file is kept as `OptiScaler.ini.helixsr-backup`.
+2. For each game it copies `nvngx.dll` into a `HelixSR` folder next to `OptiScaler.ini`, and changes two settings in that `OptiScaler.ini`: `Dx12Upscaler = dlss` and `NvngxPath = <full path of that nvngx.dll>`. The previous values are saved, and your original file is kept as `OptiScaler.ini.helixsr-backup`.
 3. **Add the launch option in Steam** (game > Properties > Launch Options):
 
    ```
@@ -65,7 +65,7 @@ Run `./helixsr-install.sh` in the HelixSR folder, after the setup, with the game
 
 `u` and a number (or `uninstall 2`) removes HelixSR: it puts the two settings back and deletes its files. Remove the launch option yourself.
 
-**By hand:** copy `nvngx.dll`, `helixsr_weights.bin` and `helixsr_kernels.pak` into one folder, set `Dx12Upscaler = dlss` and `NvngxPath = <Windows-style full path of that nvngx.dll>` in `OptiScaler.ini` (under Proton `Z:` is the Linux root, e.g. `Z:\home\you\...\HelixSR\nvngx.dll`), and add the launch option above.
+**By hand:** copy `nvngx.dll` into a folder of your choice, set `Dx12Upscaler = dlss` and `NvngxPath = <Windows-style full path of that nvngx.dll>` in `OptiScaler.ini` (under Proton `Z:` is the Linux root, e.g. `Z:\home\you\...\HelixSR\nvngx.dll`), and add the launch option above.
 
 ## Using it
 
@@ -82,7 +82,7 @@ There is nothing to configure: no settings file. HelixSR behaves like DLSS:
 
 - **DLSS is not offered in the game, and OptiScaler.log says `Not running on Nvidia, disabling DLSS`:** the launch option is missing or was overwritten. Check game > Properties > Launch Options.
 - **HelixSR is listed but nothing happens, or there is no `helixsr.log`:** check that `OptiScaler.ini` has `Dx12Upscaler = dlss` and that `NvngxPath` is the full path of the installed `nvngx.dll`.
-- **`helixsr.log` says the network files are missing:** run `helixsr-setup.sh`, then `helixsr-install.sh` again.
+- **`helixsr.log` says the network is missing:** the DLL in the game is the one from the download, before the setup. Run `helixsr-setup.sh`, then `helixsr-install.sh` again.
 - **Something looks wrong in a game:** open an issue with `helixsr.log` attached.
 
 ## Performance
@@ -113,7 +113,7 @@ These are upscaling-pass timings, not total game frame times. RDNA 3 and newer (
 
 HelixSR is an independent, unofficial project and is not affiliated with or endorsed by NVIDIA Corporation or Advanced Micro Devices, Inc.
 
-DLSS and associated NVIDIA technologies are trademarks and intellectual property of NVIDIA Corporation. HelixSR runs NVIDIA's DLSS Model E neural network. **The HelixSR download contains none of NVIDIA's weights or code:** the setup downloads NVIDIA's DLSS DLL from NVIDIA's own GitHub (under NVIDIA's license, after asking you) or uses a copy you already have, and builds the network files from it on your PC. Those files remain NVIDIA's property, are not licensed under HelixSR's Apache License 2.0, and are for your own use: do not redistribute them.
+DLSS and associated NVIDIA technologies are trademarks and intellectual property of NVIDIA Corporation. HelixSR runs NVIDIA's DLSS Model E neural network. **The HelixSR download contains none of NVIDIA's weights or code:** the setup downloads NVIDIA's DLSS DLL from NVIDIA's own GitHub (under NVIDIA's license, after asking you) or uses a copy you already have, and builds the network from it on your PC, adding it to HelixSR's DLL. That network remains NVIDIA's property, is not licensed under HelixSR's Apache License 2.0, and is for your own use: do not redistribute the DLL the setup makes.
 
 HelixSR contains a small amount of AMD FidelityFX material under the MIT license; see `THIRD_PARTY_NOTICES.md`. OptiScaler is a separate project under its own license and is not included.
 

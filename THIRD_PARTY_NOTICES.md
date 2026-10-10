@@ -34,9 +34,8 @@ SOFTWARE.
 HelixSR runs NVIDIA's DLSS Model E network (its trained weights and its GPU kernels, translated to DirectX 12 compute
 shaders). Since version 1.2.0 none of it is included in the HelixSR download: the setup downloads NVIDIA's DLSS DLL
 from NVIDIA's own GitHub (github.com/NVIDIA/DLSS, under NVIDIA's license, after asking the user) or uses a copy the
-user already has, and builds the network files (`helixsr_weights.bin`, `helixsr_kernels.pak`) from it on the user's
-PC. These components remain the property of NVIDIA Corporation and are not covered by the licenses in this
-repository; the generated files are for the user's own use and must not be redistributed.
+user already has, and builds the network from it on the user's PC and appends it to HelixSR's DLL. These components remain the property of NVIDIA Corporation and are not covered by the licenses in this
+repository; the resulting DLL is for the user's own use and must not be redistributed.
 
 This attribution identifies third-party provenance; it is not a grant of
 permission from NVIDIA and does not relicense NVIDIA-derived components.

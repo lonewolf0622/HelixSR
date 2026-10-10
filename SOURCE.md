@@ -11,8 +11,8 @@ The source code of the HelixSR DLL is **not published**. HelixSR is free to use 
 
 ## NVIDIA material
 
-The HelixSR download contains no NVIDIA weights or NVIDIA-derived kernels. The setup builds the network files on your
-PC from NVIDIA's own DLSS DLL; those files remain NVIDIA's property and must not be shared. Neither HelixSR license
+The HelixSR download contains no NVIDIA weights or NVIDIA-derived kernels. The setup builds the network on your
+PC and adds it to the DLL from NVIDIA's own DLSS DLL; those files remain NVIDIA's property and must not be shared. Neither HelixSR license
 extends to NVIDIA's components.
 
 ## Third-party components
