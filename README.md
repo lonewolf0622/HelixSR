@@ -35,13 +35,29 @@ The setup picks one of two ways per game:
 | **DLSS** (or XeSS / FSR 2) | Installs the official [OptiScaler](https://github.com/OptiScaler/OptiScaler) 0.9.4 next to the game's `.exe` and points its FSR 3.1 backend at HelixSR (a `HelixSR` folder next to it). The game's DLSS inputs reach HelixSR. | **DLSS** |
 | **only FSR 3.1** | Replaces the game's FSR 3.1 DLL with HelixSR, as in 1.4.3; the game's file is kept as `*.original.dll`. No OptiScaler. | **AMD FSR** |
 
-In OptiScaler's menu (Insert key) HelixSR is listed as **FSR HelixSR (3.1.5)**, together with AMD's own FSR (3.1.5 and 2.3.4, and FSR 4 on GPUs AMD supports it on): switch there to compare. HelixSR is the default. Everything the setup replaces is kept: in the game's `HelixSR\backup` folder (OptiScaler way) or as `*.original.dll`.
-
-**FSR 4 (or another FSR version) next to HelixSR:** put the FSR DLL into the `my-fsr` folder (any file name), run the setup again and press Enter for your games. OptiScaler's menu then offers it next to HelixSR instead of the AMD FSR that comes with HelixSR. Take it out and run the setup again to go back.
+Everything the setup replaces is kept: in the game's `HelixSR\backup` folder (OptiScaler way) or as `*.original.dll`.
 
 **A game that is not listed** (not from Steam, or not detected): see `manual-install\README.txt`, which the setup creates. It has the files and steps for both ways.
 
 **Updating HelixSR:** extract the new version into a new folder, run its setup and answer yes to update your games.
+
+## Switching between HelixSR and AMD FSR / FSR 4
+
+In games installed the OptiScaler way (games with DLSS):
+
+1. In the game, press **Insert** to open OptiScaler's menu.
+2. **Upscaling** tab → **Upscalers** → **FFX Upscaler** list.
+3. Pick **FSR HelixSR (3.1.5)** for HelixSR (the default), or AMD's **FSR 3.1.5** / **FSR 4.x**. It switches right away.
+
+FSR 4 is in that list only on GPUs AMD's DLL supports it on, or with your own FSR 4 DLL (below).
+
+Games installed the direct way (FSR only) have no menu: HelixSR always runs there. To use the game's own FSR again, run the setup and remove HelixSR (`r`).
+
+**Your own FSR DLL (for example FSR 4):**
+- **One game:** put the DLL into the `my-fsr` folder inside the game's `HelixSR` folder (next to the game's `.exe`) and start the game again. No setup needed. Delete it to go back.
+- **All games:** put the DLL into the `my-fsr` folder of this HelixSR download, run the setup again and press Enter for your games. Take it out and run the setup again to go back.
+
+Either way it is listed in the **FFX Upscaler** list by its version (for example **FSR 4.1.1**), next to HelixSR.
 
 ## Troubleshooting
 
