@@ -54,6 +54,9 @@ HelixSR is licensed under the HelixSR Freeware License (`LICENSE`). Its setup sc
 folder) are licensed under the Apache License 2.0 (`LICENSE-APACHE-2.0`). The source code of the HelixSR DLL is not
 published; see [SOURCE.md](SOURCE.md).
 
-## OptiScaler — not included
+## OptiScaler — included, GNU GPL 3.0
 
-HelixSR is used through OptiScaler (github.com/OptiScaler/OptiScaler, GPL-3.0), which must already be installed in the game. OptiScaler is a separate project under its own license; it is not part of the HelixSR download and HelixSR does not modify it.
+The `optiscaler` folder contains OptiScaler 0.9.4 (https://github.com/OptiScaler/OptiScaler) with one opt-in change
+(`[DLSS] ForceEnabled`), under the GNU General Public License version 3 (`optiscaler/LICENSE-GPL-3.0.txt`). Its
+source and the change are described in [SOURCE.md](SOURCE.md). OptiScaler is a separate program: HelixSR is not part
+of it and is not licensed under the GPL. The setup installs OptiScaler into the games you choose.
