@@ -64,6 +64,7 @@ under the GPL. The setup installs OptiScaler into the games you choose that have
 
 ## AMD FidelityFX upscaler DLL — included, unmodified
 
-The `amd-fsr` folder contains AMD's FidelityFX upscaler DLL 4.1.1 (`amd_fidelityfx_upscaler_dx12.dll`), unmodified, in
+The `amd-fsr` folder contains AMD's FidelityFX upscaler and frame generation DLLs 4.1.1 (`amd_fidelityfx_upscaler_dx12.dll`,
+`amd_fidelityfx_framegeneration_dx12.dll`), unmodified, in
 binary form, under AMD's license reproduced in `amd-fsr/FidelityFX_v2_LICENSE.md` (redistribution in binary form;
 no reverse engineering, decompilation or disassembly). Copyright (C) Advanced Micro Devices, Inc.

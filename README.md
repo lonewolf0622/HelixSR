@@ -24,7 +24,9 @@ HelixSR is an independent, unofficial project and is **not affiliated with or en
 
 No launch options, no settings files.
 
-**Remove or update:** run the setup again. For games that have HelixSR it asks *Update it? [Y/n, r = remove]*. Removing puts back every file as it was.
+**Update:** run the setup again. For games that have HelixSR it asks *Update it? [Y/n, r = remove]*.
+
+**Uninstall:** run `helixsr-uninstall.bat` (Windows) or `./helixsr-uninstall.sh` (Linux). It removes HelixSR from the games you pick and puts back every file as it was; at the end it can also delete the built network files and the setup's downloads. A game you added by hand: drop its folder onto the uninstaller (Windows) or pass it (`./helixsr-uninstall.sh /path/to/game`).
 
 ## How HelixSR gets into a game
 
@@ -94,12 +96,12 @@ Upscaling-pass timings, not total game frame times.
 
 ## Limitations
 
-- Direct3D 12 games only. Only super resolution (no frame generation of its own; a game's FSR frame generation keeps working).
+- Direct3D 12 games only. Only super resolution, no frame generation of its own. FSR frame generation (the game's, or OptiScaler's) keeps working: the setup puts AMD's frame generation DLL next to HelixSR.
 - AMD RDNA 1 and newer. Radeon Vega GPUs (Vega 56/64, Radeon VII, Vega graphics in Ryzen APUs) are not supported: they have no wave32.
 - Steam games are found automatically; other games through `manual-install`.
 
 ## License and legal
 
-HelixSR is free to use under the **HelixSR Freeware License** (`LICENSE`); its source code is not published. The setup scripts (`helixsr-setup.*` and the `setup` folder) are licensed under the Apache License 2.0 (`LICENSE-APACHE-2.0`). The `optiscaler` folder holds the official, unmodified OptiScaler 0.9.4 (GNU GPL 3.0) and fakenvapi (MIT); the `amd-fsr` folder holds AMD's FidelityFX upscaler DLL 4.1.1 under AMD's license (`amd-fsr/FidelityFX_v2_LICENSE.md`); see [SOURCE.md](SOURCE.md). HelixSR contains a small amount of AMD FidelityFX material under the MIT license; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+HelixSR is free to use under the **HelixSR Freeware License** (`LICENSE`); its source code is not published. The setup scripts (`helixsr-setup.*`, `helixsr-uninstall.*` and the `setup` folder) are licensed under the Apache License 2.0 (`LICENSE-APACHE-2.0`). The `optiscaler` folder holds the official, unmodified OptiScaler 0.9.4 (GNU GPL 3.0) and fakenvapi (MIT); the `amd-fsr` folder holds AMD's FidelityFX upscaler and frame generation DLLs 4.1.1 under AMD's license (`amd-fsr/FidelityFX_v2_LICENSE.md`); see [SOURCE.md](SOURCE.md). HelixSR contains a small amount of AMD FidelityFX material under the MIT license; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 DLSS and associated NVIDIA technologies are trademarks and intellectual property of NVIDIA Corporation. **The HelixSR download contains none of NVIDIA's weights or code:** the setup downloads NVIDIA's DLSS DLL from NVIDIA's own GitHub (under NVIDIA's license, after asking you) or uses a copy you already have, and builds the network from it on your PC. That network remains NVIDIA's property and is not covered by any license in this download; do not redistribute the network files.

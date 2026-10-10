@@ -20,7 +20,9 @@ plain text in every release.
 `amd-fsr/amd_fidelityfx_upscaler_dx12.dll` is AMD's FidelityFX upscaler DLL 4.1.1 (FSR 3.1.5 and FSR 4), unmodified,
 from the same OptiScaler release package, redistributed in binary form under AMD's license
 (`amd-fsr/FidelityFX_v2_LICENSE.md`). The setup copies it next to HelixSR as `amd_fidelityfx_upscaler_dx12.amd.dll`,
-so OptiScaler can offer AMD's FSR next to HelixSR.
+so OptiScaler can offer AMD's FSR next to HelixSR. `amd-fsr/amd_fidelityfx_framegeneration_dx12.dll` is AMD's FidelityFX
+frame generation DLL 4.1.1 from the same package, unmodified, under the same license; the setup copies it next to
+HelixSR so FSR frame generation keeps working (HelixSR has none of its own).
 
 ## NVIDIA material
 
