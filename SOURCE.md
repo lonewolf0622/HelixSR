@@ -4,8 +4,8 @@
 
 The source code of the HelixSR DLL (`amd_fidelityfx_dx12.dll`) is **not published**. HelixSR is free to use under the
 HelixSR Freeware License (`LICENSE`). The setup scripts (`helixsr-setup.sh`, `helixsr-setup.ps1`,
-`helixsr-setup.bat` and the `setup` folder) are licensed under the Apache License 2.0 (`LICENSE-APACHE-2.0`) and are
-plain text in every release.
+`helixsr-setup.bat` and the `setup` folder) are covered by the same license and are plain text in every release, so you
+can read what they do (setup scripts published up to 1.8.1 keep their Apache 2.0 license).
 
 ## OptiScaler (folder `optiscaler`)
 

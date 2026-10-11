@@ -22,9 +22,10 @@ official releases ("HelixSR"), except the parts listed in section 6.
 5. Third-party components. HelixSR contains AMD FidelityFX code under AMD's MIT license; see THIRD_PARTY_NOTICES.md.
    The setup downloads other tools from their own sources, under their own licenses.
 
-6. Parts under other licenses. The setup scripts (helixsr-setup.sh, helixsr-setup.ps1, helixsr-setup.bat and the setup
-   folder) are licensed under the Apache License, Version 2.0 (see LICENSE-APACHE-2.0). Third-party files keep their
-   own licenses.
+6. Setup scripts and other parts. The setup scripts (helixsr-setup.*, helixsr-uninstall.* and the setup folder) are
+   part of HelixSR and covered by this license: you may read and run them, but sections 2 and 3 apply to them too.
+   Setup scripts in releases up to and including 1.8.1 remain under the license they were published with (Apache
+   License, Version 2.0). Third-party files keep their own licenses.
 
 7. No warranty. HelixSR is provided "as is", without warranty of any kind, express or implied, including
    merchantability, fitness for a particular purpose and non-infringement. To the maximum extent permitted by law, the

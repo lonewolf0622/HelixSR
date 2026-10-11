@@ -79,9 +79,9 @@ The setup downloads, from their official sources and checked by SHA-256, and onl
 
 ## License of HelixSR itself
 
-HelixSR is licensed under the HelixSR Freeware License (`LICENSE`). Its setup scripts (`helixsr-setup.*` and the `setup`
-folder) are licensed under the Apache License 2.0 (`LICENSE-APACHE-2.0`). The source code of the HelixSR DLL is not
-published; see [SOURCE.md](SOURCE.md).
+HelixSR, including its setup scripts (`helixsr-setup.*` and the `setup` folder), is licensed under the HelixSR Freeware
+License (`LICENSE`); setup scripts published up to 1.8.1 keep their Apache 2.0 license. The source code of the HelixSR
+DLL is not published; see [SOURCE.md](SOURCE.md).
 
 ## OptiScaler and fakenvapi — included, unmodified
 
