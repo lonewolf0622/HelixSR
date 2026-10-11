@@ -8,18 +8,18 @@ The goal is to help gamers get better image quality from the hardware they alrea
 
 HelixSR is an independent, unofficial project and is **not affiliated with or endorsed by NVIDIA, AMD or the OptiScaler project**.
 
-**Version 1.8.0.** For AMD RDNA 1 and newer GPUs, on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
+**Version 1.8.1.** For AMD RDNA 1 and newer GPUs, on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
 
-**If 1.8.0 does not work for you, use [HelixSR 1.4.3](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.4.3)** (and please open an issue with `helixsr.log`).
+**If 1.8.1 does not work for you, use [HelixSR 1.4.3](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.4.3)** (and please open an issue with `helixsr.log`).
 
 ## Install
 
-1. Download `HelixSR-1.8.0.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
+1. Download `HelixSR-1.8.1.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
 2. Run the setup in that folder:
    - **Windows:** double-click `helixsr-setup.bat`
    - **Linux / Steam Deck:** `./helixsr-setup.sh` (in a terminal, or double-click and choose *Run in terminal*)
 3. The first time, it asks to download NVIDIA's DLSS DLL (press Enter) and builds HelixSR's network from it (about a minute).
-4. It asks for each game: *install? [f/o/n]*. Just press Enter. (**f** = FSR: pick **AMD FSR** in the game. **o** = OptiScaler: pick **DLSS** in the game. **n** = skip.) Close your games first.
+4. It asks for each game: *install? [f/o/n]*. Just press Enter. (**f** = FSR: pick **AMD FSR** in the game. **o** = OptiScaler: pick **DLSS** in the game. **n** = skip.) Close your games first. Games with DLSS also show **d** = DLSS without OptiScaler: **experimental**, never the default, read [the warning below](#experimental-dlss-without-optiscaler-d) before using it.
 5. Start the game and pick the upscaler the setup told you at the end (**AMD FSR** or **DLSS**).
 
 No launch options, no settings files.
@@ -30,14 +30,15 @@ No launch options, no settings files.
 
 ## How HelixSR gets into a game
 
-Two ways; the setup shows only the ones that work for a game (Enter = the first):
+Two ways, plus one experimental way; the setup shows only the ones that work for a game (Enter = the first):
 
 | The game has | What the setup does | Select in the game |
 |---|---|---|
 | **DLSS** (or XeSS / FSR 2): **o** | Installs the official [OptiScaler](https://github.com/OptiScaler/OptiScaler) 0.9.4 next to the game's `.exe` and points its FSR 3.1 backend at HelixSR (a `HelixSR` folder next to it). The game's DLSS inputs reach HelixSR. | **DLSS** |
 | **FSR 3.1**: **f** (the default when the game has FSR 3.1) | Replaces the game's FSR 3.1 DLL with HelixSR (drop-in), as in 1.4.3; the game's file is kept as `*.original.dll`. No OptiScaler. | **AMD FSR** |
+| **DLSS**: **d** — ⚠️ **EXPERIMENTAL** | Puts the HelixSR DLSS loader (`dxgi.dll`) and HelixSR (as `nvngx.dll`) next to the game's `.exe`: the game's own DLSS option runs HelixSR, no OptiScaler. **Read the section below first.** | **DLSS** |
 
-**Switching a game to the other way:** run the setup again and type **f** or **o** for that game. **Your own OptiScaler:** point its FSR 3.1 backend at the DLLs in `fsr3-drop-in` (`Dx12Upscaler = fsr31`, `FfxDx12Path` / `FfxDx12SRPath`); see `manual-install\README.txt`.
+**Switching a game to another way:** run the setup again and type **f**, **o** or **d** for that game. **Your own OptiScaler:** point its FSR 3.1 backend at the DLLs in `fsr3-drop-in` (`Dx12Upscaler = fsr31`, `FfxDx12Path` / `FfxDx12SRPath`); see `manual-install\README.txt`.
 
 Everything the setup replaces is kept: in the game's `HelixSR\backup` folder (OptiScaler way) or as `*.original.dll`.
 
@@ -46,6 +47,26 @@ Everything the setup replaces is kept: in the game's `HelixSR\backup` folder (Op
 **FSR 3.1 drop-in:** after the setup has run, the `fsr3-drop-in` folder holds a ready HelixSR DLL with the network inside. For a game that has FSR 3.1, rename the game's `amd_fidelityfx_upscaler_dx12.dll` (or `amd_fidelityfx_dx12.dll`) to `*.original.dll` and copy the file of the same name from `fsr3-drop-in` next to it. Keep the `*.original.dll` (FSR frame generation runs through it). Select **AMD FSR** in the game. To undo, delete HelixSR's file and rename the original back.
 
 **Updating HelixSR:** extract the new version into a new folder, run its setup and answer yes to update your games.
+
+## Experimental: DLSS without OptiScaler (d)
+
+> [!WARNING]
+> **This option is EXPERIMENTAL.** It is new, it has been tested in very few games, and only on Linux (Proton). **It is not tested on Windows at all.** It may not work in your game, it may crash the game, and it may stop working after a game update. If you want something that just works, use **f** or **o**.
+
+> [!CAUTION]
+> **Do not use it in online games or games with anti-cheat.** The loader changes what the game sees (see below). Anti-cheat software can treat that as tampering, and that can get your account **banned**. Use it only in single-player games.
+
+What it does (option **d** in the setup, for games that have DLSS):
+
+- It puts two files next to the game's `.exe`: `dxgi.dll` (the HelixSR DLSS loader, small) and `nvngx.dll` (HelixSR). A `dxgi.dll` the game already had is moved to the game's `HelixSR\backup` folder and put back when you switch or remove.
+- The game is told that the GPU is an NVIDIA GPU, so it offers DLSS. Because of that, **other NVIDIA-only options can show up in the game's menu (for example NVIDIA Reflex or DLSS Frame Generation): they do not work with HelixSR**, leave them off.
+- The game's DLSS only loads a DLSS core that carries NVIDIA's signature. The loader answers that check with the game's own NVIDIA-signed DLSS file; the core that actually runs is HelixSR.
+- Only DLSS super resolution. No frame generation.
+- It cannot be used together with OptiScaler, ReShade or any other mod that is also a `dxgi.dll` next to the game's `.exe`.
+
+**By hand** (same warnings apply), after the setup has run once: next to the game's `.exe`, copy `dlss-loader\dxgi.dll`, and copy `amd_fidelityfx_dx12.dll` (from the HelixSR folder, the network is inside it) and rename that copy to `nvngx.dll`. Keep a copy of the game's own `dxgi.dll` first if it has one. Start the game and select **DLSS**. To undo: delete the two files and put the game's `dxgi.dll` back. The same steps are in `manual-install\README.txt`.
+
+If something goes wrong: run the setup again and pick **f** or **o** for the game (or **r** to remove HelixSR). Everything is put back as it was. To report a problem, open an issue and attach `helixsr_loader.log` and `helixsr.log` (both next to the game's `.exe`) and say which way you installed.
 
 ## Switching between HelixSR and AMD FSR / FSR 4
 
@@ -81,6 +102,7 @@ Sharpness = 0.5
 
 - **Red border around the image, low resolution, shaking image:** HelixSR's network is not running. `helixsr.log` (in the game's `HelixSR` folder, or next to the game's FSR DLL) says why. Run the setup again and let it download NVIDIA's DLL.
 - **DLSS is not offered in a game:** select FSR or XeSS instead if the game has them (OptiScaler hands them to HelixSR too), or open an issue with `OptiScaler.log` (next to the game's `.exe`).
+- **The game crashes or DLSS is missing with the experimental way (d):** switch the game back to **f** or **o** in the setup. Reports are welcome (`helixsr_loader.log`, `helixsr.log`), but it is experimental: expect problems.
 - **Something else looks wrong:** open an issue with `helixsr.log` and, for the OptiScaler way, `OptiScaler.log`.
 
 ## Setup details
@@ -115,9 +137,10 @@ Upscaling-pass timings, not total game frame times.
 - Direct3D 12 games only. Only super resolution, no frame generation of its own. FSR frame generation (the game's, or OptiScaler's) keeps working: the setup puts AMD's frame generation DLL next to HelixSR.
 - AMD RDNA 1 and newer. Radeon Vega GPUs (Vega 56/64, Radeon VII, Vega graphics in Ryzen APUs) are not supported: they have no wave32.
 - Steam games are found automatically; other games through `manual-install`.
+- The DLSS way without OptiScaler (**d**) is experimental: few games tested, Linux (Proton) only, not for games with anti-cheat.
 
 ## License and legal
 
-HelixSR is free to use under the **HelixSR Freeware License** (`LICENSE`); its source code is not published. The setup scripts (`helixsr-setup.*`, `helixsr-uninstall.*` and the `setup` folder) are licensed under the Apache License 2.0 (`LICENSE-APACHE-2.0`). The `optiscaler` folder holds the official, unmodified OptiScaler 0.9.4 (GNU GPL 3.0) and fakenvapi (MIT); the `amd-fsr` folder holds AMD's FidelityFX upscaler and frame generation DLLs 4.1.1 under AMD's license (`amd-fsr/FidelityFX_v2_LICENSE.md`); see [SOURCE.md](SOURCE.md). HelixSR contains a small amount of AMD FidelityFX material under the MIT license; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+HelixSR is free to use under the **HelixSR Freeware License** (`LICENSE`); its source code is not published. This includes HelixSR's experimental DLSS loader (the `dlss-loader` folder). The setup scripts (`helixsr-setup.*`, `helixsr-uninstall.*` and the `setup` folder) are licensed under the Apache License 2.0 (`LICENSE-APACHE-2.0`). The `optiscaler` folder holds the official, unmodified OptiScaler 0.9.4 (GNU GPL 3.0) and fakenvapi (MIT); the `amd-fsr` folder holds AMD's FidelityFX upscaler and frame generation DLLs 4.1.1 under AMD's license (`amd-fsr/FidelityFX_v2_LICENSE.md`); see [SOURCE.md](SOURCE.md). HelixSR contains a small amount of AMD FidelityFX material under the MIT license; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 DLSS and associated NVIDIA technologies are trademarks and intellectual property of NVIDIA Corporation. **The HelixSR download contains none of NVIDIA's weights or code:** the setup downloads NVIDIA's DLSS DLL from NVIDIA's own GitHub (under NVIDIA's license, after asking you) or uses a copy you already have, and builds the network from it on your PC. That network remains NVIDIA's property and is not covered by any license in this download; do not redistribute the DLLs the setup builds.
