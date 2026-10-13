@@ -2,19 +2,19 @@
 
 **NVIDIA's DLSS Model E neural upscaler for AMD GPUs.**
 
-HelixSR runs NVIDIA's DLSS Model E network as standard Direct3D 12 compute shaders, **without NVIDIA Tensor Cores, an NVIDIA driver, CUDA, or ROCm**. It behaves like DLSS: no sharpening, every quality mode from native (DLAA) to Ultra Performance, dynamic resolution.
+HelixSR runs NVIDIA's DLSS Model E network as standard Direct3D 12 compute shaders, **without NVIDIA Tensor Cores, an NVIDIA driver, CUDA, or ROCm**. It behaves like DLSS: every quality mode from native (DLAA) to Ultra Performance, dynamic resolution.
 
 The goal is to help gamers get better image quality from the hardware they already own, particularly older and lower-end GPUs.
 
 HelixSR is an independent, unofficial project and is **not affiliated with or endorsed by NVIDIA, AMD or the OptiScaler project**.
 
-**Version 1.8.1.** For AMD RDNA 1 and newer GPUs, on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
+**Version 1.9.0 experimental.** For AMD RDNA 1 and newer GPUs (Radeon Vega: experimental, see below), on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
 
-**If 1.8.1 does not work for you, use [HelixSR 1.4.3](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.4.3)** (and please open an issue with `helixsr.log`).
+**If 1.9.0 does not work for you, use [HelixSR 1.4.3](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.4.3)** (and please open an issue with `helixsr.log`).
 
 ## Install
 
-1. Download `HelixSR-1.8.1.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
+1. Download `HelixSR-1.9.0.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
 2. Run the setup in that folder:
    - **Windows:** double-click `helixsr-setup.bat`
    - **Linux / Steam Deck:** `./helixsr-setup.sh` (in a terminal, or double-click and choose *Run in terminal*)
@@ -68,6 +68,21 @@ What it does (option **d** in the setup, for games that have DLSS):
 
 If something goes wrong: run the setup again and pick **f** or **o** for the game (or **r** to remove HelixSR). Everything is put back as it was. To report a problem, open an issue and attach `helixsr_loader.log` and `helixsr.log` (both next to the game's `.exe`) and say which way you installed.
 
+## Experimental: int8 network (newer GPUs)
+
+New in 1.9.0. On GPUs with fast int8 dot products (AMD RDNA 2 and newer, Radeon VII) most of the network runs with 8-bit integer math: expected about 15% faster. That is an estimate: we have not been able to test it on such a GPU. It is on by default there; other GPUs keep the normal network. The output is not bit-identical to the normal network, but the differences should be far below anything visible (about 60 dB PSNR on our test frames). If something looks wrong, turn it off with a `helixsr.ini` next to HelixSR's DLL (in the game's `HelixSR` folder, next to the game's FSR DLL, or next to the game's `.exe` for the DLSS way):
+
+```
+[Upscaling]
+Int8 = off
+```
+
+`on` forces it, `auto` (the default) uses it only on GPUs with fast int8 dot products. Reports (speed, image, `helixsr.log`) are welcome.
+
+## Experimental: Radeon Vega
+
+New in 1.9.0. Radeon Vega GPUs (Vega 56/64, Radeon VII, Vega graphics in Ryzen APUs) have no wave32, so HelixSR now runs every shader with 64 lanes there instead of refusing to start. This is automatic. It is **not tested on a real Vega GPU**: the same path forced on our test GPU gives the same image, but speed and stability on Vega are unknown. Please open an issue with `helixsr.log` and how it went.
+
 ## Switching between HelixSR and AMD FSR / FSR 4
 
 In games installed the OptiScaler way (**o**):
@@ -88,15 +103,17 @@ Either way it is listed in the **FFX Upscaler** list by its version (for example
 
 ## Sharpening
 
-Off by default, as DLSS 4 (DLSS does not sharpen). To turn it on, put a `helixsr.ini` next to HelixSR's DLL (in the game's `HelixSR` folder, or next to the game's FSR DLL) with:
+HelixSR applies a light sharpening by default (NVIDIA's filter at 0.1) for a clearer image. To change it, put a `helixsr.ini` next to HelixSR's DLL (in the game's `HelixSR` folder, next to the game's FSR DLL, or next to the game's `.exe` for the DLSS way) with, for example:
 
 ```
 [Sharpening]
 Sharpener = nvidia
-Sharpness = 0.5
+Sharpness = 0.3
 ```
 
-`Sharpener`: `off`, `nvidia` (NVIDIA's sharpening filter, as the driver's Image Sharpening) or `rcas` (AMD FSR's). `Sharpness`: 0.0 – 1.0 (0.5 = NVIDIA's default). `UseGameSlider = true` follows the game's sharpness slider when it has one.
+`Sharpener = off` turns it off (as DLSS, which does not sharpen).
+
+`Sharpener`: `off`, `nvidia` (NVIDIA's sharpening filter, as the driver's Image Sharpening) or `rcas` (AMD FSR's). `Sharpness`: 0.0 – 1.0 (HelixSR's default 0.1; 0.5 = NVIDIA's default). `UseGameSlider = true` follows the game's sharpness slider when it has one.
 
 ## Troubleshooting
 
@@ -115,7 +132,7 @@ Sharpness = 0.5
 
 ## How it works
 
-**This is NVIDIA's network running on different hardware, not a newly trained model.** HelixSR answers the game exactly as DLSS would: DLSS's camera jitter (8 × scale² Halton positions), DLSS's render sizes per quality mode, no sharpening (a game's FSR sharpening request is not applied), reactive masks ignored. In Ultra Performance the network outputs twice the render size and a final pass scales that to the screen (less shimmer, about 30% faster). Packed FP16 arithmetic makes the output close to, but not bit-identical with, NVIDIA's DLSS.
+**This is NVIDIA's network running on different hardware, not a newly trained model.** HelixSR answers the game exactly as DLSS would: DLSS's camera jitter (8 × scale² Halton positions), DLSS's render sizes per quality mode, the game's own sharpening request not applied (HelixSR's light sharpening instead, see [Sharpening](#sharpening)), reactive masks ignored. In Ultra Performance the network outputs twice the render size and a final pass scales that to the screen (less shimmer, about 30% faster). Packed FP16 arithmetic makes the output close to, but not bit-identical with, NVIDIA's DLSS.
 
 ## Performance
 
@@ -135,7 +152,7 @@ Upscaling-pass timings, not total game frame times.
 ## Limitations
 
 - Direct3D 12 games only. Only super resolution, no frame generation of its own. FSR frame generation (the game's, or OptiScaler's) keeps working: the setup puts AMD's frame generation DLL next to HelixSR.
-- AMD RDNA 1 and newer. Radeon Vega GPUs (Vega 56/64, Radeon VII, Vega graphics in Ryzen APUs) are not supported: they have no wave32.
+- AMD RDNA 1 and newer. Radeon Vega GPUs (Vega 56/64, Radeon VII, Vega graphics in Ryzen APUs): experimental, untested on real Vega hardware.
 - Steam games are found automatically; other games through `manual-install`.
 - The DLSS way without OptiScaler (**d**) is experimental: few games tested, Linux (Proton) only, not for games with anti-cheat.
 
