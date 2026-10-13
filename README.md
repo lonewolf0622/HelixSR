@@ -75,10 +75,8 @@ New in 1.9.0. On GPUs with fast int8 dot products most of the network runs with 
 - AMD RDNA 2 and newer (Radeon RX 6000, 7000 and 9000 series, and Ryzen APUs with RDNA 2 or newer graphics), **except the RX 6500 XT / RX 6400** (see below)
 - AMD Radeon RX 5500 / 5300 series and Radeon Pro 5600M (RDNA 1 GPUs that have int8 dot products)
 - AMD Radeon VII
-- NVIDIA GeForce GTX 10 series (Pascal) and newer
-- Intel Arc
 
-Other GPUs keep the normal network. The output is not bit-identical to the normal network, but the differences should be far below anything visible (about 60 dB PSNR on our test frames). If something looks wrong, turn it off with a `helixsr.ini` next to HelixSR's DLL (in the game's `HelixSR` folder, next to the game's FSR DLL, or next to the game's `.exe` for the DLSS way):
+Other GPUs keep the normal network. The int8 detection also turns it on for NVIDIA GeForce GTX 10 series (Pascal) and newer and for Intel Arc, but **HelixSR itself is not tested on NVIDIA or Intel GPUs** (see [NVIDIA GPUs](#nvidia-gpus-untested)). The output is not bit-identical to the normal network, but the differences should be far below anything visible (about 60 dB PSNR on our test frames). If something looks wrong, turn it off with a `helixsr.ini` next to HelixSR's DLL (in the game's `HelixSR` folder, next to the game's FSR DLL, or next to the game's `.exe` for the DLSS way):
 
 ```
 [Upscaling]
@@ -93,6 +91,12 @@ Int8 = off
 [Upscaling]
 Int8 = on
 ```
+
+**A PC with an NVIDIA graphics card and AMD integrated graphics (Ryzen with graphics):** 1.9.0 can pick int8 by the integrated GPU instead of the graphics card (also to be fixed). Set `Int8 = on` or `Int8 = off` in `helixsr.ini` to choose it yourself.
+
+### NVIDIA GPUs (untested)
+
+HelixSR is made for AMD GPUs and has not been tested on any NVIDIA GPU. On **GeForce GTX 10 series (Pascal)** in particular it may not work well: HelixSR's network uses 16-bit floating-point math, which these GPUs run very slowly, and the driver may not offer the 16-bit shader support HelixSR needs at all (then `helixsr.log` says so and the image is not upscaled by the network). The int8 network helps here, since Pascal is fast at int8, but part of the network stays 16-bit. If you try it, please open an issue with `helixsr.log`, your GPU and how it went.
 
 ## Experimental: Radeon Vega
 
