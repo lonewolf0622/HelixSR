@@ -102,6 +102,19 @@ HelixSR is made for AMD GPUs and has not been tested on any NVIDIA GPU. On **GeF
 
 New in 1.9.0. Radeon Vega GPUs (Vega 56/64, Radeon VII, Vega graphics in Ryzen APUs) have no wave32, so HelixSR now runs every shader with 64 lanes there instead of refusing to start. This is automatic. It is **not tested on a real Vega GPU**: the same path forced on our test GPU gives the same image, but speed and stability on Vega are unknown. Please open an issue with `helixsr.log` and how it went.
 
+## RDNA 3 and newer with OptiScaler (o): check the wave size
+
+On RDNA 3 and newer GPUs (Radeon RX 7000 and 9000 series, and Ryzen APUs with RDNA 3 / 3.5 graphics) HelixSR runs its network with 64 lanes: that is what these GPUs need. HelixSR recognizes them by the GPU id the game reports. In games installed the OptiScaler way (**o**), OptiScaler can make the GPU look like an NVIDIA GPU, and then HelixSR may not recognize it and run the network with 32 lanes instead.
+
+To check, open `helixsr.log` (in the game's `HelixSR` folder) and find the line that starts with `wave size:`. If it says `network kernels wave32` on one of these GPUs, put this into a `helixsr.ini` in the game's `HelixSR` folder (add it to the file if you already have one) and start the game again:
+
+```
+[Compatibility]
+WaveSize = 64
+```
+
+The `wave size:` line should then say `network kernels wave64`. This is only for RDNA 3 and newer: do not set it on other GPUs. It is not needed for games installed the FSR way (**f**) or the DLSS way (**d**). A fix is planned for the next version. If you see this (or the image looks wrong on these GPUs), please open an issue with `helixsr.log`.
+
 ## Switching between HelixSR and AMD FSR / FSR 4
 
 In games installed the OptiScaler way (**o**):
@@ -139,6 +152,7 @@ Sharpness = 0.3
 - **Red border around the image, low resolution, shaking image:** HelixSR's network is not running. `helixsr.log` (in the game's `HelixSR` folder, or next to the game's FSR DLL) says why. Run the setup again and let it download NVIDIA's DLL.
 - **DLSS is not offered in a game:** select FSR or XeSS instead if the game has them (OptiScaler hands them to HelixSR too), or open an issue with `OptiScaler.log` (next to the game's `.exe`).
 - **The game crashes or DLSS is missing with the experimental way (d):** switch the game back to **f** or **o** in the setup. Reports are welcome (`helixsr_loader.log`, `helixsr.log`), but it is experimental: expect problems.
+- **RX 7000 / 9000 or RDNA 3 / 3.5 APU, OptiScaler way (o), image or speed not right:** see [RDNA 3 and newer with OptiScaler](#rdna-3-and-newer-with-optiscaler-o-check-the-wave-size).
 - **Something else looks wrong:** open an issue with `helixsr.log` and, for the OptiScaler way, `OptiScaler.log`.
 
 ## Setup details
