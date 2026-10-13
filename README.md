@@ -70,7 +70,15 @@ If something goes wrong: run the setup again and pick **f** or **o** for the gam
 
 ## Experimental: int8 network (newer GPUs)
 
-New in 1.9.0. On GPUs with fast int8 dot products (PASCAL,AMD RDNA 2 and newer, Radeon VII) most of the network runs with 8-bit integer math: expected about 15% faster. That is an estimate: we have not been able to test it on such a GPU. It is on by default there; other GPUs keep the normal network. The output is not bit-identical to the normal network, but the differences should be far below anything visible (about 60 dB PSNR on our test frames). If something looks wrong, turn it off with a `helixsr.ini` next to HelixSR's DLL (in the game's `HelixSR` folder, next to the game's FSR DLL, or next to the game's `.exe` for the DLSS way):
+New in 1.9.0. On GPUs with fast int8 dot products most of the network runs with 8-bit integer math: expected about 15% faster. That is an estimate: we have not been able to test it on such a GPU. It is on by default on:
+
+- AMD RDNA 2 and newer (Radeon RX 6000, 7000 and 9000 series, and Ryzen APUs with RDNA 2 or newer graphics), **except the RX 6500 XT / RX 6400** (see below)
+- AMD Radeon RX 5500 / 5300 series and Radeon Pro 5600M (RDNA 1 GPUs that have int8 dot products)
+- AMD Radeon VII
+- NVIDIA GeForce GTX 10 series (Pascal) and newer
+- Intel Arc
+
+Other GPUs keep the normal network. The output is not bit-identical to the normal network, but the differences should be far below anything visible (about 60 dB PSNR on our test frames). If something looks wrong, turn it off with a `helixsr.ini` next to HelixSR's DLL (in the game's `HelixSR` folder, next to the game's FSR DLL, or next to the game's `.exe` for the DLSS way):
 
 ```
 [Upscaling]
@@ -78,6 +86,13 @@ Int8 = off
 ```
 
 `on` forces it, `auto` (the default) uses it only on GPUs with fast int8 dot products. Reports (speed, image, `helixsr.log`) are welcome.
+
+**Radeon RX 6500 XT / RX 6400 (and other Navi 24 GPUs):** these have fast int8 dot products, but 1.9.0 does not turn the int8 network on for them by itself (a mistake, to be fixed in the next version). To use it, put `Int8 = on` in the same `helixsr.ini`:
+
+```
+[Upscaling]
+Int8 = on
+```
 
 ## Experimental: Radeon Vega
 
