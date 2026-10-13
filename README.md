@@ -10,7 +10,7 @@ HelixSR is an independent, unofficial project and is **not affiliated with or en
 
 **Version 1.9.0 experimental.** For AMD RDNA 1 and newer GPUs (Radeon Vega: experimental, see below), on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
 
-**If 1.9.0 does not work for you, use [HelixSR 1.8.1](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.4.3)** (and please open an issue with `helixsr.log`).
+**If 1.9.0 does not work for you, use [HelixSR 1.8.1](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.8.1)** (and please open an issue with `helixsr.log`).
 
 ## Install
 
@@ -44,7 +44,7 @@ Everything the setup replaces is kept: in the game's `HelixSR\backup` folder (Op
 
 **A game that is not listed** (not from Steam, or not detected): at the end the setup asks for more games: drag the game's folder into the window (or paste its path) and answer the same question for it. You can also drop the folder onto `helixsr-setup.bat` (Windows) or pass it (`./helixsr-setup.sh /path/to/game`). By hand: see `manual-install\README.txt`, which the setup creates.
 
-**FSR 3.1 drop-in:** after the setup has run, the `fsr3-drop-in` folder holds a ready HelixSR DLL with the network inside. For a game that has FSR 3.1, rename the game's `amd_fidelityfx_upscaler_dx12.dll` (or `amd_fidelityfx_dx12.dll`) to `*.original.dll` and copy the file of the same name from `fsr3-drop-in` next to it. Keep the `*.original.dll` (FSR frame generation runs through it). Select **AMD FSR** in the game. To undo, delete HelixSR's file and rename the original back.
+**FSR 3.1 drop-in:** after the setup has run, the `fsr3-drop-in` folder holds a ready HelixSR DLL with the network inside. For a game that has FSR 3.1, rename the game's `amd_fidelityfx_upscaler_dx12.dll` (or `amd_fidelityfx_dx12.dll`) to `*.original.dll` and copy the file of the same name from `fsr3-drop-in` next to it. Keep the `*.original.dll` (FSR frame generation runs through it). Select **AMD FSR** in the game. For settings, also copy `helixsr.ini` from `fsr3-drop-in` next to it. To undo, delete HelixSR's file (and `helixsr.ini`) and rename the original back.
 
 **Updating HelixSR:** extract the new version into a new folder, run its setup and answer yes to update your games.
 
@@ -64,7 +64,7 @@ What it does (option **d** in the setup, for games that have DLSS):
 - Only DLSS super resolution. No frame generation.
 - It cannot be used together with OptiScaler, ReShade or any other mod that is also a `dxgi.dll` next to the game's `.exe`.
 
-**By hand** (same warnings apply), after the setup has run once: next to the game's `.exe`, copy `dlss-loader\dxgi.dll`, and copy `amd_fidelityfx_dx12.dll` (from the HelixSR folder, the network is inside it) and rename that copy to `nvngx.dll`. Keep a copy of the game's own `dxgi.dll` first if it has one. Start the game and select **DLSS**. To undo: delete the two files and put the game's `dxgi.dll` back. The same steps are in `manual-install\README.txt`.
+**By hand** (same warnings apply), after the setup has run once: next to the game's `.exe`, copy `dlss-loader\dxgi.dll`, and copy `amd_fidelityfx_dx12.dll` (from the HelixSR folder, the network is inside it) and rename that copy to `nvngx.dll`. Keep a copy of the game's own `dxgi.dll` first if it has one. Start the game and select **DLSS**. For settings, also copy `helixsr.ini` from `fsr3-drop-in` next to the game's `.exe`. To undo: delete those files and put the game's `dxgi.dll` back. The same steps are in `manual-install\README.txt`.
 
 If something goes wrong: run the setup again and pick **f** or **o** for the game (or **r** to remove HelixSR). Everything is put back as it was. To report a problem, open an issue and attach `helixsr_loader.log` and `helixsr.log` (both next to the game's `.exe`) and say which way you installed.
 
@@ -82,6 +82,8 @@ Other GPUs keep the normal network. The int8 detection also turns it on for NVID
 [Upscaling]
 Int8 = off
 ```
+
+**Making `helixsr.ini`:** open Notepad, type the lines, then *File → Save as*, set *Save as type* to **All files** and name it `helixsr.ini`. Otherwise Windows may save it as `helixsr.ini.txt` (with file extensions hidden it still shows as `helixsr.ini`), and HelixSR ignores it. One `helixsr.ini` holds all settings: add new sections (`[Upscaling]`, `[Sharpening]`, ...) to the same file.
 
 `on` forces it, `auto` (the default) uses it only on GPUs with fast int8 dot products. Reports (speed, image, `helixsr.log`) are welcome.
 
