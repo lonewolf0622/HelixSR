@@ -10,7 +10,7 @@ HelixSR is an independent, unofficial project and is **not affiliated with or en
 
 **Version 1.9.0 experimental.** For AMD RDNA 1 and newer GPUs (Radeon Vega: experimental, see below), on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
 
-**If 1.9.0 does not work for you, use [HelixSR 1.4.3](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.4.3)** (and please open an issue with `helixsr.log`).
+**If 1.9.0 does not work for you, use [HelixSR 1.8.1](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.4.3)** (and please open an issue with `helixsr.log`).
 
 ## Install
 
