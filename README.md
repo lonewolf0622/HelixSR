@@ -70,7 +70,7 @@ If something goes wrong: run the setup again and pick **f** or **o** for the gam
 
 ## Experimental: int8 network (newer GPUs)
 
-New in 1.9.0. On GPUs with fast int8 dot products (AMD RDNA 2 and newer, Radeon VII) most of the network runs with 8-bit integer math: expected about 15% faster. That is an estimate: we have not been able to test it on such a GPU. It is on by default there; other GPUs keep the normal network. The output is not bit-identical to the normal network, but the differences should be far below anything visible (about 60 dB PSNR on our test frames). If something looks wrong, turn it off with a `helixsr.ini` next to HelixSR's DLL (in the game's `HelixSR` folder, next to the game's FSR DLL, or next to the game's `.exe` for the DLSS way):
+New in 1.9.0. On GPUs with fast int8 dot products (PASCAL,AMD RDNA 2 and newer, Radeon VII) most of the network runs with 8-bit integer math: expected about 15% faster. That is an estimate: we have not been able to test it on such a GPU. It is on by default there; other GPUs keep the normal network. The output is not bit-identical to the normal network, but the differences should be far below anything visible (about 60 dB PSNR on our test frames). If something looks wrong, turn it off with a `helixsr.ini` next to HelixSR's DLL (in the game's `HelixSR` folder, next to the game's FSR DLL, or next to the game's `.exe` for the DLSS way):
 
 ```
 [Upscaling]
