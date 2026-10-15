@@ -1,0 +1,67 @@
+# Copies the newest HelixSR Scaler and HelixSR Desktop releases into a HelixSR release (the latest by default), where
+# the HelixSR app and people download them: older copies are replaced and SHA256SUMS.txt is written again.
+#
+# HelixSR Desktop's repository is private: the secret DESKTOP_TOKEN (a fine-grained token with read access to
+# lonewolf0622/HelixSR-Desktop- contents) lets this read its releases. Without it HelixSR Desktop is left as it is.
+name: Attach HelixSR Scaler and HelixSR Desktop
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'HelixSR release to attach them to (empty: the latest)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  attach:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download the newest builds
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DESKTOP_TOKEN: ${{ secrets.DESKTOP_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p new
+          gh release download -R lonewolf0622/HelixSR-Scaler -D new -p 'HelixSR-Scaler-*.zip' -p 'HelixSR-Scaler-*-linux.tar.gz'
+          if [ -n "$DESKTOP_TOKEN" ]; then
+            GH_TOKEN="$DESKTOP_TOKEN" gh release download -R lonewolf0622/HelixSR-Desktop- -D new -p '*.exe' -p '*.AppImage' -p '*.deb'
+          else
+            echo "::warning::No DESKTOP_TOKEN secret: HelixSR Desktop is left as it is in the release"
+          fi
+          ls -la new
+
+      - name: Replace them in the HelixSR release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          repo="${{ github.repository }}"
+          [ -n "$TAG" ] || TAG=$(gh release view -R "$repo" --json tagName -q .tagName)
+          echo "HelixSR release: $TAG"
+          has_desktop=$(ls new | grep -c '\.\(exe\|AppImage\|deb\)$' || true)
+          # older copies (not the ones about to be uploaded) go
+          gh release view "$TAG" -R "$repo" --json assets -q '.assets[].name' | while read -r a; do
+            case "$a" in
+              HelixSR-Scaler-*) old=1 ;;
+              *.exe|*.AppImage|*.deb) old=$has_desktop ;;
+              *) old=0 ;;
+            esac
+            if [ "$old" != 0 ] && [ ! -e "new/$a" ]; then
+              echo "removing $a"
+              gh release delete-asset "$TAG" "$a" -R "$repo" -y
+            fi
+          done
+          gh release upload "$TAG" new/* -R "$repo" --clobber
+          # SHA256SUMS.txt for everything in the release
+          mkdir -p all
+          gh release download "$TAG" -R "$repo" -D all
+          rm -f all/SHA256SUMS.txt
+          (cd all && sha256sum -- * >../SHA256SUMS.txt)
+          cat SHA256SUMS.txt
+          gh release upload "$TAG" SHA256SUMS.txt -R "$repo" --clobber
