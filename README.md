@@ -37,7 +37,7 @@ The goal is to help gamers get better image quality from the hardware they alrea
 
 HelixSR is an independent, unofficial project and is **not affiliated with or endorsed by NVIDIA or AMD**.
 
-**Version 1.9.0 experimental.** For AMD RDNA 1 and newer GPUs (Radeon Vega: experimental, see below), on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
+**Version 1.9.0 experimental.** For AMD RDNA 1 and newer GPUs (Radeon Vega: experimental; NVIDIA Pascal: should work, not fully tested; see below), on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
 
 **If 1.9.0 does not work for you, use [HelixSR 1.8.1](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.8.1)** (and please open an issue with `helixsr.log`).
 
@@ -125,6 +125,7 @@ Run `helixsr-uninstall.bat` (Windows) or `./helixsr-uninstall.sh` (Linux). It re
 
 - **int8 network (new in 1.9.0):** on GPUs with fast int8 dot products (AMD RDNA 2 and newer, Radeon VII) most of the network runs with 8-bit integer math: expected about 15% faster. Picked automatically; other GPUs keep the normal network. The output is not bit-identical, but the differences are far below anything visible (about 60 dB PSNR on our test frames).
 - **Radeon Vega (experimental, new in 1.9.0):** Vega 56/64, Radeon VII and Vega graphics in Ryzen APUs have no wave32, so HelixSR runs every shader with 64 lanes there (automatic). **Not tested on a real Vega GPU**: the same path forced on our test GPU gives the same image. Please open an issue with `helixsr.log` and how it went.
+- **NVIDIA Pascal (GTX 10 series) (should work, not fully tested):** GTX 1050 – 1080 Ti and TITAN X / Xp have no DLSS of their own, and HelixSR should run on them. Not fully tested yet: please open an issue with `helixsr.log` and how it went.
 
 ## Setup details
 
@@ -155,7 +156,7 @@ about 4.6 ms at 1920x1080 and 7.8 ms at 3840x2160.
 ## Limitations
 
 - Direct3D 12 games with FSR 3.1 only (others: HelixSR Desktop). The game's FSR frame generation keeps working.
-- AMD RDNA 1 and newer. Radeon Vega: experimental, untested on real Vega hardware.
+- AMD RDNA 1 and newer. Radeon Vega: experimental, untested on real Vega hardware. NVIDIA Pascal (GTX 10 series): should work, not fully tested.
 - Steam games and games from other stores' default folders are found automatically; other games: drag their folder into the setup, or see `manual-install`.
 
 ## Community
