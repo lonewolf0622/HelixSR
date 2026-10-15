@@ -1,3 +1,32 @@
+<p align="center">
+  <img src="docs/assets/helixsr-banner.svg" alt="HelixSR — more from the hardware you already own" width="100%">
+</p>
+
+<p align="center">
+  <a href="https://github.com/lonewolf0622/HelixSR/releases">
+    <img src="docs/assets/download-button.svg" alt="Download HelixSR" width="250" height="52">
+  </a>
+  &nbsp;
+  <a href="https://discord.gg/XwxcPD4GR">
+    <img src="docs/assets/discord-button.svg" alt="Join the HelixSR Discord" width="220" height="52">
+  </a>
+</p>
+
+<p align="center">
+  <a href="#install-helixsr-desktop-recommended">Installation</a> ·
+  <a href="#gpus">GPU compatibility</a> ·
+  <a href="#performance">Performance</a> ·
+  <a href="#troubleshooting">Troubleshooting</a> ·
+  <a href="#community">Community</a>
+</p>
+
+<p align="center">
+  Windows &amp; Linux / Proton · Experimental release ·
+  <a href="LICENSE">HelixSR Freeware License</a>
+</p>
+
+---
+
 # HelixSR
 
 **NVIDIA's DLSS Model E neural upscaler and DLSS 4 Frame Generation for AMD GPUs.**
@@ -128,6 +157,18 @@ about 4.6 ms at 1920x1080 and 7.8 ms at 3840x2160.
 - Direct3D 12 games with FSR 3.1 only (others: HelixSR Desktop). The game's FSR frame generation keeps working.
 - AMD RDNA 1 and newer. Radeon Vega: experimental, untested on real Vega hardware.
 - Steam games and games from other stores' default folders are found automatically; other games: drag their folder into the setup, or see `manual-install`.
+
+## Community
+
+<a href="https://discord.gg/XwxcPD4GR">
+  <img src="docs/assets/helixsr-community.svg" alt="Join the HelixSR Discord — get help, share results, and discuss releases" width="100%">
+</a>
+
+[Join our Discord](https://discord.gg/XwxcPD4GR) for setup help, testing feedback, and release discussions.
+
+For reproducible bugs, [open a GitHub issue](https://github.com/lonewolf0622/HelixSR/issues) with your GPU, operating system, game, installation method, and `helixsr.log`. Say whether you tested upscaling, frame generation, or both. Check logs for personal information before posting them publicly.
+
+---
 
 ## License and legal
 

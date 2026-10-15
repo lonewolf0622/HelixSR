@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="228" viewBox="0 0 1280 228" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Join the HelixSR community on Discord</title>
+  <desc id="desc">Get help, share your results, and help shape what comes next. Click this banner to join the HelixSR Discord server.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="228" gradientUnits="userSpaceOnUse"><stop stop-color="#111B2C"/><stop offset="1" stop-color="#17162E"/></linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1280" y2="228" gradientUnits="userSpaceOnUse"><stop stop-color="#4CD5F7"/><stop offset="1" stop-color="#9270FF"/></linearGradient>
+  </defs>
+  <rect x="1" y="1" width="1278" height="226" rx="20" fill="url(#bg)" stroke="#35415E"/>
+  <path d="M42 59V169" stroke="url(#edge)" stroke-width="3" stroke-linecap="round"/>
+  <text x="70" y="60" fill="#9DAAD0" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700" letter-spacing="3">BUILDING BETTER TOGETHER</text>
+  <text x="68" y="116" fill="#F3F5FF" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" letter-spacing="-1">Your hardware. Your feedback.</text>
+  <text x="70" y="157" fill="#B6C3D9" font-family="Arial,Helvetica,sans-serif" font-size="20">Get help, share results, and help shape what comes next.</text>
+  <text x="70" y="191" fill="#7F92B2" font-family="Arial,Helvetica,sans-serif" font-size="13">COMMUNITY SUPPORT / TESTING / RELEASE DISCUSSIONS</text>
+  <rect x="928" y="82" width="284" height="64" rx="12" fill="#5865F2"/>
+  <path d="M950 102H978V121H965L958 128V121H950Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="958" cy="111.5" r="1.5" fill="white"/><circle cx="964" cy="111.5" r="1.5" fill="white"/><circle cx="970" cy="111.5" r="1.5" fill="white"/>
+  <text x="996" y="122" fill="white" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="700">Join Discord</text>
+  <path d="M1174 108L1181 115L1174 122M1165 115H1181" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
