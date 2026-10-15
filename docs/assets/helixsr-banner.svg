@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">HelixSR</title>
+  <desc id="desc">Neural upscaling and experimental frame generation. More from the hardware you already own. A cyan and violet double helix on a dark background.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="420" gradientUnits="userSpaceOnUse"><stop stop-color="#090F1B"/><stop offset="1" stop-color="#10172A"/></linearGradient>
+    <linearGradient id="spectrum" x1="915" y1="15" x2="1105" y2="405" gradientUnits="userSpaceOnUse"><stop stop-color="#73ECFF"/><stop offset=".47" stop-color="#36B8F6"/><stop offset="1" stop-color="#A17AFF"/></linearGradient>
+    <linearGradient id="word" x1="345" y1="125" x2="510" y2="224" gradientUnits="userSpaceOnUse"><stop stop-color="#87EDFF"/><stop offset="1" stop-color="#43B9FF"/></linearGradient>
+    <radialGradient id="aura"><stop stop-color="#384BBA" stop-opacity=".27"/><stop offset="1" stop-color="#384BBA" stop-opacity="0"/></radialGradient>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" stroke="#819ED0" stroke-opacity=".055"/></pattern>
+    <filter id="glow" x="-60%" y="-30%" width="220%" height="160%"><feGaussianBlur stdDeviation="11"/></filter>
+    <clipPath id="clip"><rect width="1280" height="420" rx="22"/></clipPath>
+    <path id="strandA" d="M955 -35C955 33 1140 41 1140 115S880 215 880 288S1065 365 1065 455"/>
+    <path id="strandB" d="M1065 -35C1065 33 880 41 880 115S1140 215 1140 288S955 365 955 455"/>
+  </defs>
+  <g clip-path="url(#clip)">
+    <rect width="1280" height="420" fill="url(#bg)"/>
+    <rect x="768" width="512" height="420" fill="url(#grid)"/>
+    <ellipse cx="1020" cy="215" rx="380" ry="360" fill="url(#aura)"/>
+    <path d="M760 0L660 420M802 0L702 420" stroke="#809CD3" stroke-opacity=".055"/>
+    <g stroke="url(#spectrum)" stroke-width="22" opacity=".42" filter="url(#glow)"><use href="#strandA"/><use href="#strandB"/></g>
+    <g stroke="url(#spectrum)" stroke-width="5" stroke-linecap="round" opacity=".42">
+      <path d="M988 28H1032M928 59H1092M893 91H1127M896 124H1124M930 158H1090M983 191H1037M954 225H1066M902 258H1118M891 291H1129M923 324H1097M973 357H1047M990 391H1030"/>
+    </g>
+    <g stroke="url(#spectrum)" stroke-width="10" stroke-linecap="round"><use href="#strandA"/><use href="#strandB"/></g>
+    <g fill="#A4D8F9" opacity=".6"><circle cx="807" cy="74" r="2"/><circle cx="1203" cy="128" r="2"/><circle cx="1190" cy="349" r="3"/><circle cx="795" cy="342" r="2"/></g>
+    <rect x="64" y="62" width="24" height="3" rx="1.5" fill="#60DCFF"/>
+    <text x="103" y="70" fill="#98ADC8" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" letter-spacing="3">INDEPENDENT GPU PROJECT</text>
+    <text x="58" y="212" fill="#F4F8FF" font-family="Arial,Helvetica,sans-serif" font-size="110" font-weight="700" letter-spacing="-5">Helix<tspan fill="url(#word)">SR</tspan></text>
+    <text x="66" y="264" fill="#B5C6DC" font-family="Arial,Helvetica,sans-serif" font-size="24">More from the hardware you already own.</text>
+    <path d="M66 311H695" stroke="#283A56"/>
+    <circle cx="71" cy="350" r="4" fill="#64DFFF"/>
+    <text x="87" y="355" fill="#A9C2DF" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700" letter-spacing="1.6">NEURAL UPSCALING</text>
+    <circle cx="343" cy="350" r="4" fill="#A17AFF"/>
+    <text x="359" y="355" fill="#A9C2DF" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700" letter-spacing="1.4">EXPERIMENTAL FRAME GENERATION</text>
+    <rect x=".5" y=".5" width="1279" height="419" rx="21.5" stroke="#36445F" stroke-opacity=".65"/>
+  </g>
+</svg>

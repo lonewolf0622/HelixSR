@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="250" height="52" viewBox="0 0 250 52" fill="none" role="img" aria-labelledby="title">
+  <title id="title">Download HelixSR</title>
+  <defs><linearGradient id="bg" x2="250" y2="52" gradientUnits="userSpaceOnUse"><stop stop-color="#0B88B5"/><stop offset="1" stop-color="#246FDB"/></linearGradient></defs>
+  <rect x=".5" y=".5" width="249" height="51" rx="10" fill="url(#bg)" stroke="#62BEF4" stroke-opacity=".45"/>
+  <path d="M28 15V29M22 24L28 30L34 24M20 32V37H36V32" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="51" y="32" fill="white" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700">Download HelixSR</text>
+</svg>
