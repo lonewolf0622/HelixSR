@@ -1,35 +1,15 @@
-# Source code
+# Source code and licenses
 
-## HelixSR
+The HelixSR DLL source is not published. The DLL and setup scripts are covered by
+the HelixSR Freeware License in `LICENSE`. The download contains no NVIDIA network
+weights or translated NVIDIA kernels; setup creates the upscaling network locally.
+This release does not include HelixSR frame generation or its executor.
 
-The source code of the HelixSR DLL (`amd_fidelityfx_dx12.dll`) is **not published**. HelixSR is free to use under the
-HelixSR Freeware License (`LICENSE`). The setup scripts (`helixsr-setup.sh`, `helixsr-setup.ps1`,
-`helixsr-setup.bat` and the `setup` folder) are covered by the same license and are plain text in every release, so you
-can read what they do (setup scripts published up to 1.8.1 keep their Apache 2.0 license).
+HelixSR Scaler is a separate GPL-3.0 program based on OptiScaler. Its DLL is the
+unmodified CI build from commit e785a1915634e481ec56c972bf816af56a972a96. This package
+clarifies in its default configuration that frame generation is unavailable. The GPL source is:
+https://github.com/lonewolf0622/HelixSR-Scaler/tree/e785a1915634e481ec56c972bf816af56a972a96
 
-## OptiScaler (folder `optiscaler`)
-
-`optiscaler/OptiScaler.dll` and `optiscaler/OptiScaler.ini` are the official, unmodified OptiScaler 0.9.4 release
-(GNU GPL 3.0, `optiscaler/LICENSE-GPL-3.0.txt`), from https://github.com/OptiScaler/OptiScaler/releases/tag/v0.9.4
-(`Optiscaler_0.9.4-final.20260718._MM.7z`). Source: https://github.com/OptiScaler/OptiScaler, tag `v0.9.4`.
-`optiscaler/fakenvapi.dll` and `fakenvapi.ini` are from the same release package (fakenvapi, MIT,
-`optiscaler/fakenvapi-LICENSE.txt`, https://github.com/FakeMichau/fakenvapi).
-
-## AMD FSR (folder `amd-fsr`)
-
-`amd-fsr/amd_fidelityfx_upscaler_dx12.dll` is AMD's FidelityFX upscaler DLL 4.1.1 (FSR 3.1.5 and FSR 4), unmodified,
-from the same OptiScaler release package, redistributed in binary form under AMD's license
-(`amd-fsr/FidelityFX_v2_LICENSE.md`). The setup copies it next to HelixSR as `amd_fidelityfx_upscaler_dx12.amd.dll`,
-so OptiScaler can offer AMD's FSR next to HelixSR. `amd-fsr/amd_fidelityfx_framegeneration_dx12.dll` is AMD's FidelityFX
-frame generation DLL 4.1.1 from the same package, unmodified, under the same license; the setup copies it next to
-HelixSR so FSR frame generation keeps working (HelixSR has none of its own).
-
-## NVIDIA material
-
-The HelixSR download contains no NVIDIA weights or NVIDIA-derived kernels. The setup builds the network on your PC;
-that network remains NVIDIA's property and must not be shared. No license in this download extends to NVIDIA's
-components.
-
-## Third-party components
-
-The AMD FidelityFX-derived Lanczos weights retain their MIT license; see `THIRD_PARTY_NOTICES.md`.
+The HelixSR Freeware License does not apply to HelixSR Scaler. Its licenses are in
+`helixsr-scaler/Licenses`. Other bundled third-party notices are in
+`THIRD_PARTY_NOTICES.md`.

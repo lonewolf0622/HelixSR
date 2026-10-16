@@ -29,7 +29,7 @@
 
 # HelixSR
 
-**NVIDIA's DLSS Model E neural upscaler and DLSS 4 Frame Generation for AMD GPUs.**
+**NVIDIA's DLSS Model E neural upscaler for compatible GPUs.**
 
 HelixSR runs NVIDIA's DLSS Model E network as standard Direct3D 12 compute shaders, **without NVIDIA Tensor Cores, an NVIDIA driver, CUDA, or ROCm**. It behaves like DLSS: every quality mode from native (DLAA) to Ultra Performance, dynamic resolution.
 
@@ -37,29 +37,24 @@ The goal is to help gamers get better image quality from the hardware they alrea
 
 HelixSR is an independent, unofficial project and is **not affiliated with or endorsed by NVIDIA or AMD**.
 
-**Version 1.9.0 experimental.** For AMD RDNA 1 and newer GPUs (Radeon Vega: experimental; NVIDIA Pascal: should work, not fully tested; see below), on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
+**Version 1.9.2 experimental — upscaling only.** For AMD RDNA 1 and newer GPUs (Radeon Vega: experimental; NVIDIA Pascal: should work, not fully tested; see below), on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
 
-**If 1.9.0 does not work for you, use [HelixSR 1.8.1](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.8.1)** (and please open an issue with `helixsr.log`).
+**If 1.9.2 does not work for you, use [HelixSR 1.8.1](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.8.1)** (and please open an issue with `helixsr.log`).
 
-## New in 1.9.0
+## New in 1.9.2
 
-- **HelixSR Desktop:** one app for Windows and Linux / Steam Deck that sets HelixSR up and installs it into your games
-  with one button (Steam, Epic, GOG, Xbox / Game Pass, Heroic, Lutris, Bottles, itch, or any folder).
-- **DLSS 4 Frame Generation with HelixSR:** NVIDIA's DLSS 4 Frame Generation network now runs on GPUs without it,
-  through HelixSR Scaler. Select DLSS Frame Generation in the game. Experimental.
-- **Faster upscaling:** up to about 8% less GPU time per frame on GPUs that use the normal network (1080p Quality on
-  the BC-250: 1.14 → 1.06 ms), including RX 7000 / 9000 and Vega; and an int8 network for GPUs with fast int8 math
-  (RX 6000 and newer, Intel Arc, NVIDIA), picked automatically.
-- **HelixSR Scaler:** HelixSR through the game's own DLSS, FSR or XeSS option, with an in-game menu (Insert).
-- **Radeon Vega** support (experimental).
-- **Coming soon: multi-frame generation** (3x and 4x, up to three generated frames per real frame), already running in
-  our tests.
+**HelixSR frame generation is not included while startup reliability and compatibility are investigated.** It cannot be enabled in this DLL by changing settings or keeping files from an older install.
+
+- Restores the INT8 calibration and default layer selection from 1.9.0 after reports of slower performance and visual artifacts with the changes in 1.9.1. Confirmation still requires testing on affected GPUs.
+- Retains newer upscaling compatibility fixes, the working Speed boost setting, and reactive-mask support.
+- Includes setup scripts, files for manual installation, and HelixSR Scaler. Updates through setup remove old HelixSR frame-generation files and disable that route while preserving other settings.
+- HelixSR Desktop 1.0.3 and HelixSR Scaler 1.0.5 are available with the release.
 
 ## Install: HelixSR Desktop (recommended)
 
 Download **HelixSR Desktop** from this release (Windows: the `.exe` installer; Linux / Steam Deck: the `.AppImage` or `.deb`) and run it. It sets HelixSR up on your PC once (a few minutes) and then installs it into your games with one button each, the right way for every game:
 
-- **HelixSR Scaler** for most games: HelixSR through the game's own DLSS, FSR or XeSS option, plus frame generation and an in-game menu (Insert). Not for online games or games with anti-cheat.
+- **HelixSR Scaler** for most games: HelixSR through the game's own DLSS, FSR or XeSS option, with an in-game menu (Insert). Not for online games or games with anti-cheat.
 - **FSR drop-in** for games with FSR 3.1 and anti-cheat: only the game's FSR file is replaced (see below).
 
 It also updates and removes HelixSR per game, shows each game's log for bug reports, and puts back everything it replaced. The rest of this README is for the setup scripts in this zip, the way without the app.
@@ -68,13 +63,13 @@ It also updates and removes HelixSR per game, shows each game's log for bug repo
 
 This download installs HelixSR into **games with FSR 3.1** (also when they have DLSS): HelixSR replaces the game's FSR 3.1 DLL (`amd_fidelityfx_upscaler_dx12.dll`, or `amd_fidelityfx_dx12.dll` in games without it). The game's own file is kept as `*.original.dll`; FSR frame generation keeps working through it. In the game, select **AMD FSR**.
 
-1. Download `HelixSR-1.9.0.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
+1. Download `HelixSR-1.9.2.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
 2. Run the setup in that folder:
    - **Windows:** double-click `helixsr-setup.bat`
    - **Linux / Steam Deck:** `./helixsr-setup.sh` (in a terminal, or double-click and choose *Run in terminal*)
-3. The first time, it asks to download NVIDIA's DLSS DLL and NVIDIA's DLSS Frame Generation DLL (press Enter) and builds HelixSR's network and frame generation from them (a few minutes).
-4. Close your games. For each game with FSR 3.1 it asks *install? [f/n]*: press Enter. Games without FSR 3.1 are listed as not supported.
-5. Start the game and select **AMD FSR** in its graphics settings.
+3. The first time, it asks to download NVIDIA's DLSS DLL and builds the upscaling network locally. Frame-generation components are not downloaded or built.
+4. Close your games. The setup offers an FSR drop-in for games with FSR 3.1, or HelixSR Scaler for other supported games. Confirm the method for each game.
+5. Start the game and select **AMD FSR** for an FSR drop-in, or **DLSS** for HelixSR Scaler (FSR / XeSS if DLSS is unavailable).
 
 No launch options are needed.
 
@@ -86,12 +81,13 @@ No launch options are needed.
 
 **Installs of earlier versions** (the OptiScaler way or the DLSS loader) are recognized: in games with FSR 3.1 the setup offers to switch them to the drop-in, elsewhere to remove them. Either way everything they replaced (in the game's `HelixSR\backup` folder) is put back.
 
-## Games without FSR 3.1, DLSS 4 Frame Generation
+## Games without FSR 3.1
 
-Games with only DLSS, XeSS or FSR 2 are not supported by the drop-in. For those, and for HelixSR's frame generation (NVIDIA's DLSS Frame Generation network, run as Direct3D 12 compute shaders), use **HelixSR Desktop**: it installs **HelixSR Scaler**, an OptiScaler-based front end that uses this HelixSR download and the frame generation its setup builds.
-Multi-frame generation (3x and 4x) is coming soon.
+For games with DLSS, XeSS or FSR 2, use HelixSR Scaler through HelixSR Desktop or the setup scripts. It provides the upscaler and an Insert menu. HelixSR frame generation is not included in 1.9.2.
 
 ## Settings
+
+In HelixSR Scaler, **Speed Boost** selects INT8 **Auto / On / Off**. Restart after changing it. **Reactive-mask support** remains available: untick **Disable Reactive Mask** in Scaler and restart; the game must supply a mask.
 
 The setup puts a `helixsr.ini` next to HelixSR's DLL in each game (next to the game's FSR DLL) with the settings at their defaults. Change a value, save, and restart the game:
 
@@ -130,7 +126,6 @@ Run `helixsr-uninstall.bat` (Windows) or `./helixsr-uninstall.sh` (Linux). It re
 ## Setup details
 
 - The setup downloads NVIDIA's DLSS 310.7.0 DLL from NVIDIA's GitHub ([github.com/NVIDIA/DLSS](https://github.com/NVIDIA/DLSS), NVIDIA's license applies) after asking, builds the network for your GPU (both 32- and 64-lane shaders; `--no-wave64` skips the 64-lane ones) into HelixSR's DLL (one file), and deletes NVIDIA's DLL again. Already have DLSS 310.7.0 (or 310.2) from a game? `--dlss <path to nvngx_dlss.dll>`.
-- For frame generation (used by HelixSR Scaler) it also downloads, after asking, NVIDIA's DLSS Frame Generation DLL from NVIDIA's Streamline 2.8.0 release ([github.com/NVIDIA-RTX/Streamline](https://github.com/NVIDIA-RTX/Streamline), NVIDIA's license applies; only that DLL is read from the archive), NVIDIA's NGX core (`_nvngx.dll`, from NVIDIA's Linux driver 595.71.05 package on NVIDIA's download server, about 400 MB; only that file is kept) and Intel's XeLL library from the XeSS SDK 3.0.2 ([github.com/intel/xess](https://github.com/intel/xess), Intel's license applies). Have the DLL already? `--dlssg <path to nvngx_dlssg.dll>`. `--no-fg` (Linux) / `-NoFg` (Windows) skips this step; if it fails, the upscaler is installed as before.
 - **Windows:** Python, numpy and the shader compiler are downloaded once into `%LOCALAPPDATA%\HelixSR`. No admin rights.
 - **Linux:** needs Python 3 with numpy (the setup uses your system's, offers to install them, or downloads a portable Python into `~/.local/share/HelixSR` on read-only systems such as SteamOS and Bazzite). The shader compiler runs through Proton.
 - Every download is pinned to an exact version and checked by SHA-256.
@@ -142,7 +137,7 @@ Run `helixsr-uninstall.bat` (Windows) or `./helixsr-uninstall.sh` (Linux). It re
 
 ## Performance
 
-GPU time per upscaled frame on the **BC-250 at 2000 MHz** (upscaling pass only, not the whole game frame):
+Historical GPU time per upscaled frame for versions 1.8.1 and 1.9.0 on the **BC-250 at 2000 MHz** (upscaling pass only, not the whole game frame):
 
 | Output | Mode | 1.8.1 | 1.9.0 |
 |---|---|---:|---:|
@@ -150,14 +145,11 @@ GPU time per upscaled frame on the **BC-250 at 2000 MHz** (upscaling pass only, 
 | 1920x804 | Quality | 0.93 ms | **0.86 ms** |
 | 3840x2160 | Performance (1920x1080) | 3.52 ms | **3.34 ms** |
 
-Frame generation (DLSS 4 Frame Generation through HelixSR Scaler), GPU time for one generated frame on the same GPU:
-about 4.6 ms at 1920x1080 and 7.8 ms at 3840x2160.
-
 ## Limitations
 
 - Direct3D 12 games with FSR 3.1 only (others: HelixSR Desktop). The game's FSR frame generation keeps working.
 - AMD RDNA 1 and newer. Radeon Vega: experimental, untested on real Vega hardware. NVIDIA Pascal (GTX 10 series): should work, not fully tested.
-- Steam games and games from other stores' default folders are found automatically; other games: drag their folder into the setup, or see `manual-install`.
+- Steam games and games from other stores' default folders are found automatically; other games: drag their folder into the setup, or see the generated `manual` folder.
 
 ## Community
 
@@ -167,7 +159,7 @@ about 4.6 ms at 1920x1080 and 7.8 ms at 3840x2160.
 
 [Join our Discord](https://discord.gg/XwxcPD4GR) for setup help, testing feedback, and release discussions.
 
-For reproducible bugs, [open a GitHub issue](https://github.com/lonewolf0622/HelixSR/issues) with your GPU, operating system, game, installation method, and `helixsr.log`. Say whether you tested upscaling, frame generation, or both. Check logs for personal information before posting them publicly.
+For reproducible bugs, [open a GitHub issue](https://github.com/lonewolf0622/HelixSR/issues) with your GPU, operating system, game, installation method, and `helixsr.log`. Include the HelixSR version you tested. Check logs for personal information before posting them publicly.
 
 ---
 
@@ -175,4 +167,4 @@ For reproducible bugs, [open a GitHub issue](https://github.com/lonewolf0622/Hel
 
 HelixSR is free to use under the **HelixSR Freeware License** (`LICENSE`); its source code is not published. The license covers the HelixSR DLL, its documentation and the setup scripts (`helixsr-setup.*`, `helixsr-uninstall.*` and the `setup` folder): you may use them free of charge and redistribute them only unmodified, complete as an official release and free of charge; you may read and run the setup scripts but not modify them (setup scripts published up to 1.8.1 keep their Apache 2.0 license). HelixSR contains a small amount of AMD FidelityFX material under the MIT license; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [SOURCE.md](SOURCE.md).
 
-DLSS and associated NVIDIA technologies are trademarks and intellectual property of NVIDIA Corporation. **The HelixSR download contains none of NVIDIA's weights or code:** the setup downloads NVIDIA's DLSS and DLSS Frame Generation DLLs from NVIDIA's own GitHub and NVIDIA's NGX core from NVIDIA's download server (under NVIDIA's licenses, after asking you) or uses copies you already have, and builds the networks from them on your PC. Those networks remain NVIDIA's property and are not covered by any license in this download; do not redistribute the DLLs the setup builds.
+DLSS and associated NVIDIA technologies are trademarks and intellectual property of NVIDIA Corporation. **The HelixSR download contains none of NVIDIA's network weights or translated kernels:** the setup downloads NVIDIA's DLSS DLL from NVIDIA's GitHub (under NVIDIA's license, after asking you) or uses a copy you already have, and builds the upscaling network on your PC. The resulting network remains NVIDIA's property and is not covered by HelixSR's license; do not redistribute the DLL the setup builds.
