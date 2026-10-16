@@ -6,9 +6,9 @@ weights or translated NVIDIA kernels; setup creates the upscaling network locall
 This release does not include HelixSR frame generation or its executor.
 
 HelixSR Scaler is a separate GPL-3.0 program based on OptiScaler. Its DLL is the
-unmodified CI build from commit e785a1915634e481ec56c972bf816af56a972a96. This package
-clarifies in its default configuration that frame generation is unavailable. The GPL source is:
-https://github.com/lonewolf0622/HelixSR-Scaler/tree/e785a1915634e481ec56c972bf816af56a972a96
+unmodified CI build from commit 91df07708b2128a07674a5c832b8ff06c7448688. This package
+withdraws only the HelixSR frame-generation provider; alternatives remain available. The GPL source is:
+https://github.com/lonewolf0622/HelixSR-Scaler/tree/91df07708b2128a07674a5c832b8ff06c7448688
 
 The HelixSR Freeware License does not apply to HelixSR Scaler. Its licenses are in
 `helixsr-scaler/Licenses`. Other bundled third-party notices are in

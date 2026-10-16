@@ -37,18 +37,20 @@ The goal is to help gamers get better image quality from the hardware they alrea
 
 HelixSR is an independent, unofficial project and is **not affiliated with or endorsed by NVIDIA or AMD**.
 
-**Version 1.9.2 experimental — upscaling only.** For AMD RDNA 1 and newer GPUs (Radeon Vega: experimental; NVIDIA Pascal: should work, not fully tested; see below), on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
+**Version 1.9.3 experimental.** For AMD RDNA 1 and newer GPUs (Radeon Vega: experimental; NVIDIA Pascal: should work, not fully tested; see below), on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
 
-**If 1.9.2 does not work for you, use [HelixSR 1.8.1](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.8.1)** (and please open an issue with `helixsr.log`).
+**If 1.9.3 does not work for you, use [HelixSR 1.8.1](https://github.com/lonewolf0622/HelixSR/releases/tag/v1.8.1)** (and please open an issue with `helixsr.log`).
 
-## New in 1.9.2
+## New in 1.9.3
 
-**HelixSR frame generation is not included while startup reliability and compatibility are investigated.** It cannot be enabled in this DLL by changing settings or keeping files from an older install.
+**Alternative frame generation is available again. Only HelixSR's experimental frame-generation provider is withdrawn while its startup issues are investigated.**
 
-- Restores the INT8 calibration and default layer selection from 1.9.0 after reports of slower performance and visual artifacts with the changes in 1.9.1. Confirmation still requires testing on affected GPUs.
-- Retains newer upscaling compatibility fixes, the working Speed boost setting, and reactive-mask support.
-- Includes setup scripts, files for manual installation, and HelixSR Scaler. Updates through setup remove old HelixSR frame-generation files and disable that route while preserving other settings.
-- HelixSR Desktop 1.0.3 and HelixSR Scaler 1.0.5 are available with the release.
+- FSR, XeSS and other supported Scaler FG providers remain selectable with their usual game/GPU requirements and runtime libraries.
+- Updates preserve alternative FG input, output, enabled state and provider settings. An old HelixSR provider choice is redirected to FFX, without selecting the unavailable HelixSR engine.
+- Keeps the 1.9.0 INT8 calibration and layer selection, Speed Boost Auto / On / Off, reactive-mask support and newer upscaling fixes from 1.9.2.
+- Includes HelixSR Scaler 1.0.6 and the existing HelixSR Desktop 1.0.3 installers.
+
+If you installed 1.9.2, select your preferred alternative again in Scaler's Frame Generation menu after updating; that release disabled those saved settings. HelixSR's own frame-generation engine is absent from the upscaling DLL and cannot be enabled with settings or leftover files.
 
 ## Install: HelixSR Desktop (recommended)
 
@@ -63,7 +65,7 @@ It also updates and removes HelixSR per game, shows each game's log for bug repo
 
 This download installs HelixSR into **games with FSR 3.1** (also when they have DLSS): HelixSR replaces the game's FSR 3.1 DLL (`amd_fidelityfx_upscaler_dx12.dll`, or `amd_fidelityfx_dx12.dll` in games without it). The game's own file is kept as `*.original.dll`; FSR frame generation keeps working through it. In the game, select **AMD FSR**.
 
-1. Download `HelixSR-1.9.2.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
+1. Download `HelixSR-1.9.3.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
 2. Run the setup in that folder:
    - **Windows:** double-click `helixsr-setup.bat`
    - **Linux / Steam Deck:** `./helixsr-setup.sh` (in a terminal, or double-click and choose *Run in terminal*)
@@ -83,7 +85,7 @@ No launch options are needed.
 
 ## Games without FSR 3.1
 
-For games with DLSS, XeSS or FSR 2, use HelixSR Scaler through HelixSR Desktop or the setup scripts. It provides the upscaler and an Insert menu. HelixSR frame generation is not included in 1.9.2.
+For games with DLSS, XeSS or FSR 2, use HelixSR Scaler through HelixSR Desktop or the setup scripts. It provides the upscaler and an Insert menu. HelixSR frame generation is not included. Alternative FG providers remain selectable in Scaler.
 
 ## Settings
 
