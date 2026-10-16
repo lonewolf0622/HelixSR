@@ -1,0 +1,89 @@
+# One-off repair of HelixSR-<tag>.zip in a release: fixes the shader compiler download link typo in
+# helixsr-setup.sh / helixsr-setup.ps1 (v1.9.3607 -> v1.9.2607, issue #70), drops macOS junk entries (__MACOSX, ._*,
+# .DS_Store), keeps the .sh files executable, then replaces the zip in the release and writes SHA256SUMS.txt again.
+# Safe to run twice: a zip that is already fixed is left alone.
+name: Fix the HelixSR release zip
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'HelixSR release to repair'
+        required: true
+        default: 'v1.9.3'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Repair the zip
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          repo="${{ github.repository }}"
+          name="HelixSR-${TAG#v}.zip"
+          mkdir -p old
+          gh release download "$TAG" -R "$repo" -D old -p "$name"
+          cat > fix.py <<'PY'
+          import hashlib, stat, sys, zipfile
+          src, dst = sys.argv[1], sys.argv[2]
+          BAD = b"/download/v1.9.3607/"
+          GOOD = b"/download/v1.9.2607/"
+          def junk(n):
+              p = n.split("/")
+              return "__MACOSX" in p or p[-1] == ".DS_Store" or p[-1].startswith("._")
+          changed = False
+          with zipfile.ZipFile(src) as zi, zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as zo:
+              for info in zi.infolist():
+                  if junk(info.filename):
+                      changed = True
+                      continue
+                  if info.is_dir():
+                      continue
+                  data = zi.read(info)
+                  base = info.filename.rsplit("/", 1)[-1]
+                  if base in ("helixsr-setup.sh", "helixsr-setup.ps1") and BAD in data:
+                      data = data.replace(BAD, GOOD)
+                      changed = True
+                  mode = (info.external_attr >> 16) & 0o7777
+                  if info.filename.endswith(".sh") and not mode & 0o100:
+                      mode |= 0o755
+                      changed = True
+                  out = zipfile.ZipInfo(info.filename, info.date_time)
+                  out.compress_type = zipfile.ZIP_DEFLATED
+                  out.create_system = 3
+                  out.external_attr = (stat.S_IFREG | (mode or 0o644)) << 16
+                  zo.writestr(out, data)
+          print("changed" if changed else "unchanged")
+          PY
+          python3 fix.py "old/$name" "$name.new" | tee result.txt
+          if grep -qx unchanged result.txt; then echo "Already fixed: nothing to do"; exit 0; fi
+          # checks before anything is replaced
+          python3 - "$name.new" "old/$name" <<'PY'
+          import sys, zipfile
+          new, old = zipfile.ZipFile(sys.argv[1]), zipfile.ZipFile(sys.argv[2])
+          assert new.testzip() is None, "new zip is damaged"
+          files = lambda z: {i.filename for i in z.infolist() if not i.is_dir() and "__MACOSX" not in i.filename
+                             and not i.filename.rsplit("/", 1)[-1].startswith("._") and not i.filename.endswith(".DS_Store")}
+          assert files(new) == files(old), "file list differs"
+          for n in new.namelist():
+              if n.endswith(("helixsr-setup.sh", "helixsr-setup.ps1")):
+                  d = new.read(n)
+                  assert b"v1.9.2607" in d and b"v1.9.3607" not in d, n
+              if n.endswith(".sh"):
+                  assert (new.getinfo(n).external_attr >> 16) & 0o100, n + " is not executable"
+          print("checks passed:", len(files(new)), "files")
+          PY
+          mv "$name.new" "$name"
+          gh release upload "$TAG" "$name" -R "$repo" --clobber
+          mkdir -p all
+          gh release download "$TAG" -R "$repo" -D all
+          rm -f all/SHA256SUMS.txt
+          (cd all && sha256sum -- * >../SHA256SUMS.txt)
+          cat SHA256SUMS.txt
+          gh release upload "$TAG" SHA256SUMS.txt -R "$repo" --clobber
