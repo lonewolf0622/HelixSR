@@ -10,6 +10,10 @@
   <a href="https://discord.gg/XwxcPD4GR">
     <img src="docs/assets/discord-button.svg" alt="Join the HelixSR Discord" width="220" height="52">
   </a>
+  &nbsp;
+  <a href="https://www.paypal.com/donate/?business=WL2384PF9Z9W6&amp;no_recurring=0&amp;currency_code=USD">
+    <img src="docs/assets/support-button.svg" alt="Support HelixSR via PayPal" width="220" height="52">
+  </a>
 </p>
 
 <p align="center">
@@ -17,7 +21,8 @@
   <a href="#gpus">GPU compatibility</a> ·
   <a href="#performance">Performance</a> ·
   <a href="#troubleshooting">Troubleshooting</a> ·
-  <a href="#community">Community</a>
+  <a href="#community">Community</a> ·
+  <a href="#support-helixsr">Support</a>
 </p>
 
 <p align="center">
@@ -162,6 +167,12 @@ Historical GPU time per upscaled frame for versions 1.8.1 and 1.9.0 on the **BC-
 [Join our Discord](https://discord.gg/XwxcPD4GR) for setup help, testing feedback, and release discussions.
 
 For reproducible bugs, [open a GitHub issue](https://github.com/lonewolf0622/HelixSR/issues) with your GPU, operating system, game, installation method, and `helixsr.log`. Include the HelixSR version you tested. Check logs for personal information before posting them publicly.
+
+## Support HelixSR
+
+If HelixSR has helped you get more from your GPU, consider supporting its continued development, testing, and compatibility improvements. Contributions are optional and appreciated.
+
+[Support HelixSR via PayPal](https://www.paypal.com/donate/?business=WL2384PF9Z9W6&no_recurring=0&currency_code=USD)
 
 ---
 
