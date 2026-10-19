@@ -140,7 +140,6 @@ Frame generation needs a DirectX 12 game with DLSS frame generation and a GPU wi
 | AMD Radeon Vega / Radeon VII, RX 400 / 500 | Experimental: uses extra 64-lane builds the setup makes; not tested on real hardware |
 | Intel Arc | Should work, not tested |
 | NVIDIA GTX 10 / 16, RTX 20 / 30 | **Not yet:** NVIDIA's frame-generation code checks the real NVIDIA driver and refuses these cards; a fix is being worked on. Upscaling works. |
-| NVIDIA RTX 40 / 50 | Use NVIDIA's own DLSS frame generation |
 
 If frame generation does not work on your card, please open an issue with `helixsr.log`.
 
