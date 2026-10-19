@@ -34,19 +34,23 @@
 
 # HelixSR
 
-**NVIDIA's DLSS Model E upscaler and DLSS frame generation for GPUs without DLSS.**
+**NVIDIA's DLSS Model E upscaler and experimental DLSS frame generation, focused on older GPUs.**
 
-HelixSR runs NVIDIA's DLSS Model E network as standard Direct3D 12 compute shaders, **without NVIDIA Tensor Cores, an NVIDIA driver, CUDA, or ROCm**. It behaves like DLSS: every quality mode from native (DLAA) to Ultra Performance, dynamic resolution. Since 2.0 the same DLL also runs **NVIDIA's DLSS frame generation** in games that have it.
+HelixSR runs NVIDIA's DLSS Model E network as standard Direct3D 12 compute shaders, **without NVIDIA Tensor Cores, an NVIDIA driver, CUDA, or ROCm**. It behaves like DLSS: every quality mode from native (DLAA) to Ultra Performance, dynamic resolution. Since 2.0 the same DLL also includes experimental support for **NVIDIA's DLSS frame generation** in games that have it.
 
-The goal is to help gamers get better image quality from the hardware they already own, particularly older and lower-end GPUs.
+> [!IMPORTANT]
+> **HelixSR is focused on older graphics cards**, especially AMD RDNA 1 / RDNA 2 and the other older GPUs listed in [GPUs](#gpus). The goal is to help gamers get more from the hardware they already own. **RDNA 3 and newer GPUs may work, but they are not the focus of the project.**
+
+> [!WARNING]
+> **Frame generation is still a work in progress.** It may not work at all in some games or on some GPUs. Even when it runs, performance and image quality may be poor, and visual artifacts or instability may occur.
 
 HelixSR is an independent, unofficial project and is **not affiliated with or endorsed by NVIDIA or AMD**.
 
-**Version 2.0.0 experimental.** For AMD RDNA 1 and newer GPUs (Radeon Vega, NVIDIA GTX 10/16 and Intel Arc: should work, not fully tested; see [GPUs](#gpus)), on Linux (Proton) and Windows. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
+**Version 2.0.0 experimental**, available on Linux (Proton) and Windows. See [GPUs](#gpus) for compatibility and current testing status. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
 
 ## New in 2.0.0
 
-- **DLSS frame generation is back, in one DLL.** HelixSR's FidelityFX DLL (`HelixSR-fsrfg\amd_fidelityfx_dx12.dll`) does upscaling and DLSS frame generation. When a game turns on DLSS frame generation, HelixSR runs NVIDIA's own frame generation through the game's own Streamline, as on an NVIDIA card.
+- **Experimental DLSS frame generation is back, in one DLL.** HelixSR's FidelityFX DLL (`HelixSR-fsrfg\amd_fidelityfx_dx12.dll`) does upscaling and DLSS frame generation. When a game turns on DLSS frame generation, HelixSR runs NVIDIA's own frame generation through the game's own Streamline. This remains a work in progress and may not work or work well on your setup.
 - **Light mode by default:** NVIDIA's frame-generation performance mode (310.9.16). **Full** mode (310.3) is one click away in HelixSR Scaler's menu, with QuickFlow for extra speed.
 - **Faster frame generation:** light mode about 20–30% less GPU time per generated frame than at the start of 2.0's development (1080p 2.2 ms, 1440p 3.6 ms, 4K 4.2 ms on the BC-250), full mode about 6–11% less, with the same frames.
 - **HelixSR Scaler 1.1.0 handles frame generation exactly like OptiScaler:** HelixSR is a frame-generation provider next to OptiScaler's own (`FGInput = nvngxfg`, `FGNvngxReplacement = HelixSR`). AMD FSR and Intel XeSS frame generation stay available in the menu.
@@ -72,7 +76,7 @@ It also updates and removes HelixSR per game, shows each game's log for bug repo
    - **Linux / Steam Deck:** `./helixsr-setup.sh` (in a terminal, or double-click and choose *Run in terminal*)
 3. The first time, it asks before each download from NVIDIA (the DLSS DLL for the network, NVIDIA's DLSS frame generation DLLs and NVIDIA's NGX core) and builds everything on your PC. This takes a few minutes.
 4. It lists your games (Steam, Epic, GOG, Xbox, Heroic, Lutris) and asks for each one: *install? [s/f/n]*. Press Enter. **s** = HelixSR Scaler: pick **DLSS** in the game. **f** = FSR drop-in (games with FSR 3.1): pick **AMD FSR** in the game. Games with anti-cheat get the FSR drop-in, never HelixSR Scaler by default.
-5. It asks once: *Turn on HelixSR frame generation?* It works in DirectX 12 games with DLSS frame generation: turn DLSS frame generation on in the game.
+5. It asks once: *Turn on HelixSR frame generation?* This experimental feature requires a DirectX 12 game with DLSS frame generation. Turn DLSS frame generation on in the game to try it; it may not work or work well on your setup.
 6. Start the game. **Insert** opens HelixSR Scaler's menu (upscaler, HelixSR's settings, frame generation and its quality).
 
 **A game that is not listed:** run `./helixsr-setup.sh /path/to/game`, or drop the game's folder onto `helixsr-setup.bat`.
@@ -117,28 +121,32 @@ Run `helixsr-uninstall.bat` (Windows) or `./helixsr-uninstall.sh` (Linux), or re
 ## Troubleshooting
 
 - **Red border around the image, low resolution, shaking image:** HelixSR's network is not running. `helixsr.log` (in the game's `HelixSR-fsrfg` folder) says why. Run the setup again.
-- **No frame generation:** it needs a DirectX 12 game with DLSS frame generation; turn it on in the game. HelixSR Scaler's menu shows the frame-generation state.
+- **No frame generation:** it needs a DirectX 12 game with DLSS frame generation; turn it on in the game. HelixSR Scaler's menu shows the frame-generation state. Frame generation is still a work in progress and may fail even when these requirements are met.
 - **Image flickers with frame generation:** try `[DlssFrameGeneration] ShaderModel = 6.6` in `helixsr.ini`, or Full mode in the menu, and open an issue with `helixsr.log`.
 - **The game no longer starts or crashes:** remove HelixSR (app or uninstaller), or verify the game's files in Steam.
 - **Something else looks wrong:** open an issue with `helixsr.log`.
 
 ## GPUs
 
-- **AMD RDNA 2 / 3 / 4** (RX 6000 / 7000 / 9000, Steam Deck, Ryzen graphics): upscaling with 8-bit math (int8) where it helps, frame generation.
-- **AMD RDNA 1 and the BC-250:** upscaling and frame generation (our test GPU).
-- **Radeon Vega / Radeon VII, RX 400 / 500 (experimental):** 64-lane shaders, chosen automatically; frame generation with the extra builds the setup makes. Not tested on real hardware: please open an issue with `helixsr.log`.
+- **AMD RDNA 1 and the BC-250:** upscaling and experimental frame generation. The BC-250 is our test GPU.
+- **AMD RDNA 2** (RX 6000, Steam Deck, RDNA 2-based Ryzen graphics): upscaling with 8-bit math (int8) where it helps, experimental frame generation.
+- **AMD RDNA 3 and newer** (including RX 7000 / 9000 and newer Ryzen graphics): may work, but are **not the focus of the project**. Compatibility, performance, and frame-generation quality are not guaranteed.
+- **Radeon Vega / Radeon VII, RX 400 / 500 (experimental):** 64-lane shaders, chosen automatically; experimental frame generation with the extra builds the setup makes. Not tested on real hardware: please open an issue with `helixsr.log`.
 - **NVIDIA GTX 10 / 16 series and Intel Arc (should work, not fully tested):** GTX 10 uses 32-bit paths. Please open an issue with `helixsr.log` and how it went.
 - DirectX 11 and Vulkan games get upscaling through HelixSR Scaler.
 
 ### Frame generation: which cards
 
+**Frame generation is experimental and still a work in progress on all GPUs.** It may not work at all or may have poor image quality, performance, or stability. The entries below describe current testing and expected compatibility, not guaranteed results.
+
 Frame generation needs a DirectX 12 game with DLSS frame generation and a GPU with shader model 6.6 and 64-bit integer shader support.
 
 | GPU | Frame generation |
 |---|---|
-| AMD RDNA 1 / 2 / 3 / 4 (RX 5000 / 6000 / 7000 / 9000), BC-250, Steam Deck, Ryzen RDNA graphics | **Should work** (tested on the BC-250 only) |
+| AMD RDNA 1 / 2 (RX 5000 / 6000), BC-250, Steam Deck, RDNA 2-based Ryzen graphics | **Experimental; tested on the BC-250 only** |
+| AMD RDNA 3 and newer (including RX 7000 / 9000 and newer Ryzen graphics) | **May work; not the project's focus**. Not tested by us. |
 | AMD Radeon Vega / Radeon VII, RX 400 / 500 | Experimental: uses extra 64-lane builds the setup makes; not tested on real hardware |
-| Intel Arc | Should work, not tested |
+| Intel Arc | Experimental; may work, not tested |
 | NVIDIA GTX 10 / 16, RTX 20 / 30 | **Not yet:** NVIDIA's frame-generation code checks the real NVIDIA driver and refuses these cards; a fix is being worked on. Upscaling works. |
 
 If frame generation does not work on your card, please open an issue with `helixsr.log`.
@@ -159,8 +167,8 @@ GPU time on the **BC-250 at 2000 MHz** (HelixSR 2.0.0):
 
 ## Limitations
 
-- Frame generation: DirectX 12 games with DLSS frame generation only. Light mode can show moving HUD elements twice in generated frames.
-- AMD RDNA 1 and newer are our main target; other GPUs: see [GPUs](#gpus).
+- **Frame generation is a work in progress:** it may not work at all, or may have poor performance, visual artifacts, or instability. It requires DirectX 12 games with DLSS frame generation. Light mode can show moving HUD elements twice in generated frames.
+- **Older GPUs are the project's focus.** RDNA 3 and newer may work, but are not the project's development focus; see [GPUs](#gpus).
 - HelixSR Scaler is not for online games or games with anti-cheat (use the FSR drop-in there).
 
 ## Community
