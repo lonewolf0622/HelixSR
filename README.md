@@ -128,7 +128,21 @@ Run `helixsr-uninstall.bat` (Windows) or `./helixsr-uninstall.sh` (Linux), or re
 - **AMD RDNA 1 and the BC-250:** upscaling and frame generation (our test GPU).
 - **Radeon Vega / Radeon VII, RX 400 / 500 (experimental):** 64-lane shaders, chosen automatically; frame generation with the extra builds the setup makes. Not tested on real hardware: please open an issue with `helixsr.log`.
 - **NVIDIA GTX 10 / 16 series and Intel Arc (should work, not fully tested):** GTX 10 uses 32-bit paths. Please open an issue with `helixsr.log` and how it went.
-- Frame generation: DirectX 12 games with DLSS frame generation. DirectX 11 and Vulkan games get upscaling through HelixSR Scaler.
+- DirectX 11 and Vulkan games get upscaling through HelixSR Scaler.
+
+### Frame generation: which cards
+
+Frame generation needs a DirectX 12 game with DLSS frame generation and a GPU with shader model 6.6 and 64-bit integer shader support.
+
+| GPU | Frame generation |
+|---|---|
+| AMD RDNA 1 / 2 / 3 / 4 (RX 5000 / 6000 / 7000 / 9000), BC-250, Steam Deck, Ryzen RDNA graphics | **Should work** (tested on the BC-250 only) |
+| AMD Radeon Vega / Radeon VII, RX 400 / 500 | Experimental: uses extra 64-lane builds the setup makes; not tested on real hardware |
+| Intel Arc | Should work, not tested |
+| NVIDIA GTX 10 / 16, RTX 20 / 30 | **Not yet:** NVIDIA's frame-generation code checks the real NVIDIA driver and refuses these cards; a fix is being worked on. Upscaling works. |
+| NVIDIA RTX 40 / 50 | Use NVIDIA's own DLSS frame generation |
+
+If frame generation does not work on your card, please open an issue with `helixsr.log`.
 
 ## How it works
 
