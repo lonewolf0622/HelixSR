@@ -84,7 +84,33 @@ It also updates and removes HelixSR per game, shows each game's log for bug repo
 
 **Update:** run the setup of the new version. For games that have HelixSR it asks *installed. Update? [Enter/s/f/r/n]*: Enter updates, **s** / **f** switches the way, **r** removes it. The app and the setup install the same way, so each can update or remove what the other installed.
 
-**By hand:** the FSR drop-in: the `fsr3-drop-in` folder the setup makes holds HLX FSR 4 under both FSR 3.1 file names (its `README.txt` has the details). HelixSR Scaler is best installed by the app or the setup.
+## Install by hand
+
+Run the setup once first (steps 1 to 3 above; press Enter at every game to skip it). The ZIP's DLLs only hold HelixSR's code: the setup builds the network into `HelixSR\helixsr.dll` and HLX FSR 4's shaders into `helixsr-scaler\OptiScaler\amd_fidelityfx_upscaler_dx12.dll` (and `HLX-FSR4\`). Copied straight out of the ZIP they have nothing to run, and HLX FSR 4 is then not offered at all.
+
+Then copy into the game's folder with its .exe (Unreal Engine games: `Binaries\Win64`):
+
+1. From `helixsr-scaler`:
+   - `OptiScaler.dll`, renamed to **`dxgi.dll`** (if the game already has a `dxgi.dll`, name it `winmm.dll` or `version.dll` instead)
+   - `OptiScaler.ini`
+   - the whole `OptiScaler` folder. It already holds HLX FSR 4 as `amd_fidelityfx_upscaler_dx12.dll` next to AMD's original as `amd_fidelityfx_upscaler_dx12.amd.dll`: keep both, don't replace either with another FSR DLL.
+2. The whole **`HelixSR`** folder (`helixsr.dll`, `helixsr.ini`), next to `dxgi.dll`, not inside the `OptiScaler` folder.
+
+```
+Game\
+  game.exe
+  dxgi.dll            (OptiScaler.dll, renamed)
+  OptiScaler.ini
+  OptiScaler\         (HLX FSR 4 + AMD's FSR DLLs, XeSS, ...)
+  HelixSR\            (helixsr.dll = HLX DLSS, helixsr.ini)
+```
+
+Pick **DLSS** in the game for HLX DLSS; pick HLX FSR 4 (or another upscaler) in HelixSR Scaler's menu (**Insert**). On Linux, `dxgi.dll` needs no launch option; with `winmm.dll` or `version.dll` add `WINEDLLOVERRIDES="winmm=n,b" %command%` (or `version=n,b`) to the game's launch options.
+
+- **HLX FSR 4 alone** (games with FSR 3.1, without HelixSR Scaler): the `fsr3-drop-in` folder the setup makes holds HLX FSR 4 under both FSR 3.1 file names (its `README.txt` has the details).
+- **Frame generation** needs more files: install it with the app or the setup.
+- **Remove:** delete these files and folders again.
+- **Something does not work?** `OptiScaler.log` and `HelixSR\helixsr.log` in the game folder say what happened; attach them to an issue.
 
 ## Settings
 
