@@ -128,6 +128,8 @@ GPU time per frame on the **BC-250** (HelixSR 3.1.0, Quality mode, the speed tes
 | 2560x1440 | 1.60 ms | 1.90 ms |
 | 3840x2160 | 3.40 ms | 4.21 ms |
 
+**On other GPUs:** [AMD Radeon RX 5700 XT, Red Dead Redemption 2 (Windows)](https://lonewolf0622.github.io/HelixSR/comparisons/rx-5700-xt-rdr2/): HLX DLSS, HLX FSR 4 and FSR 3.1.5 timed in the game, with zoomed side-by-side and slider comparisons.
+
 ## Limitations
 
 - **No HelixSR frame generation in 3.x** (AMD FSR and XeSS frame generation are in HelixSR Scaler's menu).

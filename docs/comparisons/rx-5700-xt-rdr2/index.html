@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GPU: RX 5700 XT – RDR2 Upscaler Comparison</title>
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f4f6f8; --card:#ffffff; --text:#14202b; --muted:#5d6b78; --line:#dde3e9;
+  --head:#0e2a33; --head-text:#e8fbff; --accent:#0a9d8f; --best-bg:#d9f5ef; --best-text:#046b60; --row:#f8fafb;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0b1118; --card:#121b25; --text:#e6edf3; --muted:#8a99a8; --line:#243342;
+    --head:#0c2a30; --head-text:#d9fbff; --accent:#2fe0c8; --best-bg:#0f3a35; --best-text:#5cf0da; --row:#0f1822;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0b1118; --card:#121b25; --text:#e6edf3; --muted:#8a99a8; --line:#243342;
+  --head:#0c2a30; --head-text:#d9fbff; --accent:#2fe0c8; --best-bg:#0f3a35; --best-text:#5cf0da; --row:#0f1822;
+}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:24px 16px 40px}
+.wrap{max-width:1700px;margin:0 auto}
+h1{font-size:22px;margin:0 0 4px}
+h1 span{color:var(--accent)}
+h2{font-size:17px;margin:0 0 2px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.08)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:900px;font-size:14px}
+thead th{background:var(--head);color:var(--head-text);font-weight:600;padding:12px 10px;text-align:center;border-left:1px solid rgba(255,255,255,.08);white-space:nowrap}
+thead th:first-child{text-align:left;border-left:0;padding-left:16px}
+tbody td{padding:11px 10px;text-align:center;border-top:1px solid var(--line)}
+tbody td:first-child{text-align:left;padding-left:16px;font-weight:600;color:var(--muted)}
+tbody tr:nth-child(even){background:var(--row)}
+tr.key td{font-size:15px}
+td.best{background:var(--best-bg);color:var(--best-text);font-weight:700}
+.legend{margin-top:12px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--best-bg);border:1px solid var(--best-text);vertical-align:middle;margin-right:5px}
+.notes{margin:18px 2px 0;padding:0;list-style:none;color:var(--muted);font-size:13px;line-height:1.55}
+.notes li{padding-left:16px;position:relative;margin-bottom:6px}
+.notes li:before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.notes b{color:var(--text)}
+.zoomhead{margin:34px 0 4px;font-size:19px}
+.reg{margin-top:22px}
+.hint{color:var(--muted);font-size:13px;margin:0 0 10px}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+figure img{display:block;width:100%;height:auto;image-rendering:pixelated}
+figcaption{padding:8px 10px;font-size:13px;font-weight:600;text-align:center;background:var(--head);color:var(--head-text)}
+tr.grp th{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;padding:8px 10px}
+th.q{box-shadow:inset 0 -3px 0 #5b8cff}
+th.n{box-shadow:inset 0 -3px 0 #a56bff}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--bg);padding:10px 0;margin-top:6px;border-bottom:1px solid var(--line)}
+button,select{font:inherit;font-size:14px;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:8px}
+button{cursor:pointer;padding:8px 16px}
+select{padding:7px 10px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;border-radius:0}
+.seg button.on{background:var(--accent);color:#04201c;font-weight:700}
+.sel{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px}
+.panel[hidden],.sel[hidden]{display:none}
+.cmpbox{display:none}
+.reg.slider .trio{display:none}
+.reg.slider .cmpbox{display:block}
+.cmp{position:relative;width:min(100%,960px);aspect-ratio:8/5;overflow:hidden;border:1px solid var(--line);border-radius:10px;touch-action:none;cursor:ew-resize;user-select:none;outline:none}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;display:block}
+.cmp .ia{clip-path:inset(0 calc(100% - var(--p,50%)) 0 0)}
+.cmp .hd{position:absolute;top:0;bottom:0;left:var(--p,50%);width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.5)}
+.cmp .hd:after{content:"\25C0  \25B6";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;color:#111;font-size:10px;padding:6px 8px;border-radius:99px;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.5)}
+.lbl{position:absolute;top:8px;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.65);color:#fff}
+.lbl.l{left:8px}.lbl.r{right:8px}
+.rh{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:10px}
+.rh .hint{margin:0}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tools button{padding:6px 14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>GPU: <span>AMD Radeon RX 5700 XT</span></h1>
+  <p class="sub">Red Dead Redemption 2 · Windows · D3D12 · HelixSR upscalers vs FSR 3.1.5 · input FSR 2.X</p>
+
+  <div class="card"><div class="scroll">
+  <table>
+    <thead>
+      <tr class="grp"><th></th><th colspan="3" class="q">Quality mode</th><th colspan="3" class="n">Native mode</th></tr>
+      <tr><th>Metric</th><th>HLX DLSS</th><th>HLX FSR 4</th><th>FSR 3.1.5</th><th>HLX DLSS</th><th>HLX FSR 4</th><th>FSR 3.1.5</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>OS</td><td>Windows</td><td>Windows</td><td>Windows</td><td>Windows</td><td>Windows</td><td>Windows</td></tr>
+      <tr><td>Input</td><td>FSR 2.X</td><td>FSR 2.X</td><td>FSR 2.X</td><td>FSR 2.X</td><td>FSR 2.X</td><td>FSR 2.X</td></tr>
+      <tr><td>Output resolution</td><td>1920x1080</td><td>1920x1080</td><td>1920x1080</td><td>1920x1080</td><td>1920x1080</td><td>1920x1080</td></tr>
+      <tr class="key"><td>Upscale GPU time</td><td>1.57 ms</td><td>1.71 ms</td><td class="best">0.90 ms</td><td>1.94 ms</td><td>1.80 ms</td><td class="best">1.36 ms</td></tr>
+      <tr class="key"><td>FPS</td><td>60.0</td><td>60.0</td><td>59.1</td><td>91.9</td><td>92.9</td><td>95.4</td></tr>
+    </tbody>
+  </table>
+  </div></div>
+  <div class="legend"><i></i>Lowest upscale time in its mode</div>
+
+  <ul class="notes">
+    <li><b>FSR 3.1.5 has the lowest upscale time in both modes.</b> In Quality its single reading (0.90 ms) is well below its running average (1.46 ms), so the real gap is smaller. The Quality averages are 1.59 ms (HLX DLSS), 1.63 ms (HLX FSR 4) and 1.46 ms (FSR 3.1.5).</li>
+    <li><b>HLX DLSS and HLX FSR 4 swap places between modes:</b> HLX DLSS is faster in Quality (1.57 vs 1.71 ms), HLX FSR 4 is faster in Native (1.80 vs 1.94 ms).</li>
+    <li>Quality FPS sits at about 60 for all three, which looks like a frame cap, so FPS does not separate them here. Native FPS comes from a different, lighter scene, so FPS should not be compared between the two modes.</li>
+    <li>Scenes are not pixel-identical: NPCs, horses, clouds and foliage moved between shots, so look at the crops for general detail, not exact matches.</li>
+  </ul>
+
+  <h2 class="zoomhead">Zoomed comparison</h2>
+  <p class="sub">Crops come from the 1080p screenshots and are enlarged with no smoothing: 2x for scenery, 3x for the hair crops.</p>
+  <div class="bar">
+    <div class="seg" id="tabs"><button class="on" data-tab="q">Quality samples</button><button data-tab="n">Native samples</button></div>
+  </div>
+  <div id="tab-q" class="panel"><section class="reg"><div class="rh"><div><h2>Hair (300% zoom)</h2><p class="hint">Curl definition in the hair and how clean the edge is against the road.</p></div><div class="tools"><div class="seg modes"><button class="on" data-mode="side">Side by side</button><button data-mode="slider">Slider</button></div><div class="sel" hidden><select class="a"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select> vs <select class="b"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select></div></div></div><div class="trio"><figure><img src="img/quality-hair-hlx-dlss.png" alt="hair HLX DLSS" width="480" height="300"><figcaption>HLX DLSS</figcaption></figure><figure><img src="img/quality-hair-hlx-fsr-4.png" alt="hair HLX FSR 4" width="480" height="300"><figcaption>HLX FSR 4</figcaption></figure><figure><img src="img/quality-hair-fsr-3-1-5.png" alt="hair FSR 3.1.5" width="480" height="300"><figcaption>FSR 3.1.5</figcaption></figure></div><div class="cmpbox"><div class="cmp" tabindex="0"><img class="ib" alt=""><img class="ia" alt=""><span class="lbl l"></span><span class="lbl r"></span><div class="hd"></div></div></div></section>
+<section class="reg"><div class="rh"><div><h2>Saints Hotel sign and wall</h2><p class="hint">Letter edges on the sign, plank lines and the dark barrel below.</p></div><div class="tools"><div class="seg modes"><button class="on" data-mode="side">Side by side</button><button data-mode="slider">Slider</button></div><div class="sel" hidden><select class="a"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select> vs <select class="b"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select></div></div></div><div class="trio"><figure><img src="img/quality-sign-hlx-dlss.png" alt="sign HLX DLSS" width="480" height="300"><figcaption>HLX DLSS</figcaption></figure><figure><img src="img/quality-sign-hlx-fsr-4.png" alt="sign HLX FSR 4" width="480" height="300"><figcaption>HLX FSR 4</figcaption></figure><figure><img src="img/quality-sign-fsr-3-1-5.png" alt="sign FSR 3.1.5" width="480" height="300"><figcaption>FSR 3.1.5</figcaption></figure></div><div class="cmpbox"><div class="cmp" tabindex="0"><img class="ib" alt=""><img class="ia" alt=""><span class="lbl l"></span><span class="lbl r"></span><div class="hd"></div></div></div></section>
+<section class="reg"><div class="rh"><div><h2>Church and hillside</h2><p class="hint">Church windows, bell tower detail and thin power lines against the trees.</p></div><div class="tools"><div class="seg modes"><button class="on" data-mode="side">Side by side</button><button data-mode="slider">Slider</button></div><div class="sel" hidden><select class="a"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select> vs <select class="b"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select></div></div></div><div class="trio"><figure><img src="img/quality-church-hlx-dlss.png" alt="church HLX DLSS" width="480" height="300"><figcaption>HLX DLSS</figcaption></figure><figure><img src="img/quality-church-hlx-fsr-4.png" alt="church HLX FSR 4" width="480" height="300"><figcaption>HLX FSR 4</figcaption></figure><figure><img src="img/quality-church-fsr-3-1-5.png" alt="church FSR 3.1.5" width="480" height="300"><figcaption>FSR 3.1.5</figcaption></figure></div><div class="cmpbox"><div class="cmp" tabindex="0"><img class="ib" alt=""><img class="ia" alt=""><span class="lbl l"></span><span class="lbl r"></span><div class="hd"></div></div></div></section>
+<section class="reg"><div class="rh"><div><h2>Left building roof planks</h2><p class="hint">Plank edges, the lattice under the roof and any shimmer or moire.</p></div><div class="tools"><div class="seg modes"><button class="on" data-mode="side">Side by side</button><button data-mode="slider">Slider</button></div><div class="sel" hidden><select class="a"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select> vs <select class="b"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select></div></div></div><div class="trio"><figure><img src="img/quality-roof-hlx-dlss.png" alt="roof HLX DLSS" width="480" height="300"><figcaption>HLX DLSS</figcaption></figure><figure><img src="img/quality-roof-hlx-fsr-4.png" alt="roof HLX FSR 4" width="480" height="300"><figcaption>HLX FSR 4</figcaption></figure><figure><img src="img/quality-roof-fsr-3-1-5.png" alt="roof FSR 3.1.5" width="480" height="300"><figcaption>FSR 3.1.5</figcaption></figure></div><div class="cmpbox"><div class="cmp" tabindex="0"><img class="ib" alt=""><img class="ia" alt=""><span class="lbl l"></span><span class="lbl r"></span><div class="hd"></div></div></div></section>
+<section class="reg"><div class="rh"><div><h2>Mud and grass on the ground</h2><p class="hint">Grass blade edges and the wet, reflective mud texture.</p></div><div class="tools"><div class="seg modes"><button class="on" data-mode="side">Side by side</button><button data-mode="slider">Slider</button></div><div class="sel" hidden><select class="a"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select> vs <select class="b"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select></div></div></div><div class="trio"><figure><img src="img/quality-mud-hlx-dlss.png" alt="mud HLX DLSS" width="480" height="300"><figcaption>HLX DLSS</figcaption></figure><figure><img src="img/quality-mud-hlx-fsr-4.png" alt="mud HLX FSR 4" width="480" height="300"><figcaption>HLX FSR 4</figcaption></figure><figure><img src="img/quality-mud-fsr-3-1-5.png" alt="mud FSR 3.1.5" width="480" height="300"><figcaption>FSR 3.1.5</figcaption></figure></div><div class="cmpbox"><div class="cmp" tabindex="0"><img class="ib" alt=""><img class="ia" alt=""><span class="lbl l"></span><span class="lbl r"></span><div class="hd"></div></div></div></section>
+</div>
+  <div id="tab-n" class="panel" hidden><section class="reg"><div class="rh"><div><h2>Hair (300% zoom)</h2><p class="hint">Individual hair strands and how soft or crisp the hair edge looks against the barn.</p></div><div class="tools"><div class="seg modes"><button class="on" data-mode="side">Side by side</button><button data-mode="slider">Slider</button></div><div class="sel" hidden><select class="a"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select> vs <select class="b"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select></div></div></div><div class="trio"><figure><img src="img/native-hair-hlx-dlss.png" alt="hair HLX DLSS" width="480" height="300"><figcaption>HLX DLSS</figcaption></figure><figure><img src="img/native-hair-hlx-fsr-4.png" alt="hair HLX FSR 4" width="480" height="300"><figcaption>HLX FSR 4</figcaption></figure><figure><img src="img/native-hair-fsr-3-1-5.png" alt="hair FSR 3.1.5" width="480" height="300"><figcaption>FSR 3.1.5</figcaption></figure></div><div class="cmpbox"><div class="cmp" tabindex="0"><img class="ib" alt=""><img class="ia" alt=""><span class="lbl l"></span><span class="lbl r"></span><div class="hd"></div></div></div></section>
+<section class="reg"><div class="rh"><div><h2>Character head and jacket</h2><p class="hint">Hair strands, jacket stitching and the star emblem.</p></div><div class="tools"><div class="seg modes"><button class="on" data-mode="side">Side by side</button><button data-mode="slider">Slider</button></div><div class="sel" hidden><select class="a"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select> vs <select class="b"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select></div></div></div><div class="trio"><figure><img src="img/native-face-hlx-dlss.png" alt="face HLX DLSS" width="480" height="300"><figcaption>HLX DLSS</figcaption></figure><figure><img src="img/native-face-hlx-fsr-4.png" alt="face HLX FSR 4" width="480" height="300"><figcaption>HLX FSR 4</figcaption></figure><figure><img src="img/native-face-fsr-3-1-5.png" alt="face FSR 3.1.5" width="480" height="300"><figcaption>FSR 3.1.5</figcaption></figure></div><div class="cmpbox"><div class="cmp" tabindex="0"><img class="ib" alt=""><img class="ia" alt=""><span class="lbl l"></span><span class="lbl r"></span><div class="hd"></div></div></div></section>
+<section class="reg"><div class="rh"><div><h2>Distant barn and roofs</h2><p class="hint">Wood plank lines, window frames and the tiny walking figures.</p></div><div class="tools"><div class="seg modes"><button class="on" data-mode="side">Side by side</button><button data-mode="slider">Slider</button></div><div class="sel" hidden><select class="a"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select> vs <select class="b"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select></div></div></div><div class="trio"><figure><img src="img/native-barn-hlx-dlss.png" alt="barn HLX DLSS" width="480" height="300"><figcaption>HLX DLSS</figcaption></figure><figure><img src="img/native-barn-hlx-fsr-4.png" alt="barn HLX FSR 4" width="480" height="300"><figcaption>HLX FSR 4</figcaption></figure><figure><img src="img/native-barn-fsr-3-1-5.png" alt="barn FSR 3.1.5" width="480" height="300"><figcaption>FSR 3.1.5</figcaption></figure></div><div class="cmpbox"><div class="cmp" tabindex="0"><img class="ib" alt=""><img class="ia" alt=""><span class="lbl l"></span><span class="lbl r"></span><div class="hd"></div></div></div></section>
+<section class="reg"><div class="rh"><div><h2>Fence and grass</h2><p class="hint">Grass blade edges and the fence post outlines against the foliage.</p></div><div class="tools"><div class="seg modes"><button class="on" data-mode="side">Side by side</button><button data-mode="slider">Slider</button></div><div class="sel" hidden><select class="a"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select> vs <select class="b"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select></div></div></div><div class="trio"><figure><img src="img/native-fence-hlx-dlss.png" alt="fence HLX DLSS" width="480" height="300"><figcaption>HLX DLSS</figcaption></figure><figure><img src="img/native-fence-hlx-fsr-4.png" alt="fence HLX FSR 4" width="480" height="300"><figcaption>HLX FSR 4</figcaption></figure><figure><img src="img/native-fence-fsr-3-1-5.png" alt="fence FSR 3.1.5" width="480" height="300"><figcaption>FSR 3.1.5</figcaption></figure></div><div class="cmpbox"><div class="cmp" tabindex="0"><img class="ib" alt=""><img class="ia" alt=""><span class="lbl l"></span><span class="lbl r"></span><div class="hd"></div></div></div></section>
+<section class="reg"><div class="rh"><div><h2>Tree foliage against the sky</h2><p class="hint">Leaf cluster edges, thin branches and any shimmer or smearing.</p></div><div class="tools"><div class="seg modes"><button class="on" data-mode="side">Side by side</button><button data-mode="slider">Slider</button></div><div class="sel" hidden><select class="a"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select> vs <select class="b"><option value="0">HLX DLSS</option><option value="1">HLX FSR 4</option><option value="2">FSR 3.1.5</option></select></div></div></div><div class="trio"><figure><img src="img/native-tree-hlx-dlss.png" alt="tree HLX DLSS" width="480" height="300"><figcaption>HLX DLSS</figcaption></figure><figure><img src="img/native-tree-hlx-fsr-4.png" alt="tree HLX FSR 4" width="480" height="300"><figcaption>HLX FSR 4</figcaption></figure><figure><img src="img/native-tree-fsr-3-1-5.png" alt="tree FSR 3.1.5" width="480" height="300"><figcaption>FSR 3.1.5</figcaption></figure></div><div class="cmpbox"><div class="cmp" tabindex="0"><img class="ib" alt=""><img class="ia" alt=""><span class="lbl l"></span><span class="lbl r"></span><div class="hd"></div></div></div></section>
+</div>
+</div>
+<script>(function(){
+var names=['HLX DLSS','HLX FSR 4','FSR 3.1.5'];
+function sel(g,b){[].forEach.call(g.querySelectorAll('button'),function(x){x.classList.toggle('on',x===b)})}
+[].forEach.call(document.querySelectorAll('.reg'),function(s){
+  var imgs=s.querySelectorAll('.trio img'),cmp=s.querySelector('.cmp'),ia=cmp.querySelector('.ia'),ib=cmp.querySelector('.ib'),ll=cmp.querySelector('.l'),lr=cmp.querySelector('.r'),sa=s.querySelector('.sel .a'),sb=s.querySelector('.sel .b'),box=s.querySelector('.sel'),p=50;
+  function upd(){ia.src=imgs[sa.value].src;ib.src=imgs[sb.value].src;ll.textContent=names[sa.value];lr.textContent=names[sb.value]}
+  function setP(v){p=Math.max(0,Math.min(100,v));cmp.style.setProperty('--p',p+'%')}
+  function fromX(x){var r=cmp.getBoundingClientRect();setP((x-r.left)/r.width*100)}
+  sa.value=0;sb.value=1;sa.onchange=upd;sb.onchange=upd;upd();
+  cmp.onpointerdown=function(e){try{cmp.setPointerCapture(e.pointerId)}catch(x){}fromX(e.clientX);cmp.onpointermove=function(ev){fromX(ev.clientX)}};
+  cmp.onpointerup=cmp.onpointercancel=function(){cmp.onpointermove=null};
+  cmp.onkeydown=function(e){if(e.key==='ArrowLeft'){setP(p-2);e.preventDefault()}if(e.key==='ArrowRight'){setP(p+2);e.preventDefault()}};
+  [].forEach.call(s.querySelectorAll('.modes button'),function(b){b.onclick=function(){sel(b.parentNode,b);var m=b.dataset.mode==='slider';s.classList.toggle('slider',m);box.hidden=!m}});
+});
+[].forEach.call(document.querySelectorAll('#tabs button'),function(b){b.onclick=function(){sel(b.parentNode,b);document.getElementById('tab-q').hidden=b.dataset.tab!=='q';document.getElementById('tab-n').hidden=b.dataset.tab!=='n'}});
+})();</script>
+</body>
+</html>
