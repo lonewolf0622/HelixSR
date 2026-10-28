@@ -2,7 +2,7 @@
 
 ## AMD FidelityFX — MIT
 
-HelixSR includes a Lanczos weight approximation derived from AMD FidelityFX, under the
+HelixSR includes a Lanczos weight approximation and the RCAS sharpening filter derived from AMD FidelityFX, under the
 MIT license below.
 
 ```
@@ -31,8 +31,8 @@ SOFTWARE.
 
 ## AMD FidelityFX Super Resolution 1 (EASU) — MIT
 
-The optional `UpscaleFilter = easu` final pass (Ultra Performance) uses EASU from AMD FidelityFX Super Resolution 1 (the
-headers `ffx_a.h` and `ffx_fsr1.h`), under the MIT license below.
+The optional `UpscaleFilter = easu` final pass (Ultra Performance) uses EASU from
+AMD FidelityFX Super Resolution 1 (the headers `ffx_a.h` and `ffx_fsr1.h`), under the MIT license below.
 
 ```
 Copyright (c) 2021 Advanced Micro Devices, Inc. All rights reserved.
@@ -93,31 +93,56 @@ repository; the resulting DLL is for the user's own use and must not be redistri
 This attribution identifies third-party provenance; it is not a grant of
 permission from NVIDIA and does not relicense NVIDIA-derived components.
 
+## AMD FidelityFX Super Resolution 4 network — not included
+
+HLX FSR 4 runs AMD's FSR 4 upscaling network (its trained weights and its GPU shaders, rebuilt for HLX FSR 4's own
+pipeline as DirectX 12 compute shaders). None of it is included in the HelixSR download: HLX FSR 4's DLL comes without
+its data, and the setup builds it on the user's PC from AMD's FSR 4 driver file `amdxcffx64.dll` 2.4.0.4370 (checked
+by SHA-256): the copy of an installed AMD Software 26.10.1 driver, or, after asking the user, read out of AMD's driver
+package downloaded from AMD's own servers (only that file is kept, nothing is installed):
+https://drivers.amd.com/drivers/whql-amd-software-adrenalin-edition-26.10.1-win11-b.exe
+The data is appended to HLX FSR 4's DLLs in the HelixSR folder (`HLX-FSR4` and `helixsr-scaler/OptiScaler`).
+AMD's driver file is under AMD's license that comes with AMD Software. These components remain the property of
+Advanced Micro Devices, Inc. and are not covered by the licenses in this repository; the resulting DLLs are for the
+user's own use and must not be redistributed.
+
+This attribution identifies third-party provenance; it is not a grant of permission from AMD and does not relicense
+AMD-derived components.
+
+## HelixSR Scaler 2.0.0 (folder `helixsr-scaler`) — GPL-3.0
+
+The `helixsr-scaler` folder is HelixSR Scaler 2.0.0, a separate program based on OptiScaler, as its own release builds
+it (one folder for Windows and Linux: the files are the same), with two additions: HLX FSR 4's DLL as
+`OptiScaler/amd_fidelityfx_upscaler_dx12.dll` (AMD's own kept next to it as `amd_fidelityfx_upscaler_dx12.amd.dll`)
+and OptiPatcher (below). The setup copies it into the games you pick. HelixSR Scaler is licensed under the GNU General
+Public License 3.0 (`helixsr-scaler/Licenses/OptiScaler_LICENSE.txt`); the third-party components it carries (AMD
+FidelityFX, Intel XeSS, Microsoft DirectX Agility SDK) are under the licenses in `helixsr-scaler/Licenses`. Its
+source code: see [SOURCE.md](SOURCE.md). The HelixSR Freeware License does not apply to HelixSR Scaler, and HelixSR's
+own files contain none of its code.
+
+## OptiPatcher — MIT
+
+`helixsr-scaler/OptiScaler/plugins/OptiPatcher.asi` is OptiPatcher (https://github.com/optiscaler/OptiPatcher), built
+unmodified from commit `ff789437bcd1d313312f5c7f786467d2652ad91b`; it lets supported games offer DLSS on GPUs
+without it. MIT license: `helixsr-scaler/Licenses/OptiPatcher_LICENSE.txt`.
+
 ## Tools downloaded by the setup — not included
 
 The setup downloads, from their official sources and checked by SHA-256, and only on the user's PC:
-- Microsoft DirectX Shader Compiler 1.9.2607 (github.com/microsoft/DirectXShaderCompiler), under Microsoft's
-  licenses shipped with it;
+- Microsoft DirectX Shader Compiler 1.9.2607 and 1.9.2609 (github.com/microsoft/DirectXShaderCompiler), under
+  Microsoft's licenses shipped with them;
 - Python (python.org on Windows; on Linux the system's, or python-build-standalone) under the PSF license;
 - numpy (PyPI) under the BSD license.
 
+## Setup helper runtime
+
+The setup's prebuilt helper (`setup/lib/model/launch_synth`, `launch_synth.exe`) is statically linked with the
+LLVM C++ runtime (libc++, libc++abi, libunwind; Apache 2.0 with LLVM exceptions) and, on Linux, musl (MIT), built with
+Zig (MIT); their licenses are in `setup/lib/model/runtime-licenses`.
+
 ## License of HelixSR itself
 
-HelixSR, including its setup scripts (`helixsr-setup.*` and the `setup` folder), is licensed under the HelixSR Freeware
-License (`LICENSE`); setup scripts published up to 1.8.1 keep their Apache 2.0 license. The source code of the HelixSR
+HelixSR, including HLX FSR 4's DLL (without AMD's data) and its setup scripts (`helixsr-setup.*`, `helixsr-uninstall.*` and the `setup`
+folder, HLX FSR 4's builder `setup/hlxfsr4` included), is licensed
+under the HelixSR Freeware License (`LICENSE`); setup scripts published up to 1.8.1 keep their Apache 2.0 license. The source code of the HelixSR
 DLL is not published; see [SOURCE.md](SOURCE.md).
-
-## OptiScaler and fakenvapi — included, unmodified
-
-The `optiscaler` folder contains the official OptiScaler 0.9.4 release (https://github.com/OptiScaler/OptiScaler,
-GNU General Public License version 3, `optiscaler/LICENSE-GPL-3.0.txt`) and fakenvapi from the same release package
-(https://github.com/FakeMichau/fakenvapi, MIT, `optiscaler/fakenvapi-LICENSE.txt`), both unmodified. Their source is
-described in [SOURCE.md](SOURCE.md). They are separate programs: HelixSR is not part of them and is not licensed
-under the GPL. The setup installs OptiScaler into the games you choose that have DLSS, XeSS or FSR 2.
-
-## AMD FidelityFX upscaler DLL — included, unmodified
-
-The `amd-fsr` folder contains AMD's FidelityFX upscaler and frame generation DLLs 4.1.1 (`amd_fidelityfx_upscaler_dx12.dll`,
-`amd_fidelityfx_framegeneration_dx12.dll`), unmodified, in
-binary form, under AMD's license reproduced in `amd-fsr/FidelityFX_v2_LICENSE.md` (redistribution in binary form;
-no reverse engineering, decompilation or disassembly). Copyright (C) Advanced Micro Devices, Inc.
