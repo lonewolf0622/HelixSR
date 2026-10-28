@@ -112,6 +112,21 @@ Pick **DLSS** in the game for HLX DLSS; pick HLX FSR 4 (or another upscaler) in 
 - **Remove:** delete these files and folders again.
 - **Something does not work?** `OptiScaler.log` and `HelixSR\helixsr.log` in the game folder say what happened; attach them to an issue.
 
+## Update
+
+Your game settings are kept by every way of updating.
+
+**HelixSR Desktop:** when a new HelixSR is out, the app shows **Update HelixSR to x.y.z** at the top. Press it (it downloads and builds the new version, a few minutes), then press **Update** on each game. A new HelixSR Desktop shows its own update button the same way.
+
+**Setup scripts:** download the new ZIP, extract it (into a new folder, or over the old one) and run `helixsr-setup.bat` / `./helixsr-setup.sh` again. For each game that has HelixSR it asks *installed. Update?*: press **Enter**.
+
+**By hand:** run the new setup first, then copy the same files as in [Install by hand](#install-by-hand) over the old ones. Keep the game's `OptiScaler.ini` if you changed settings in it.
+
+**A release fixed under the same version** (for example the fixed 3.1.0 of 2026-10-28; the release notes say so):
+
+- **Setup scripts or by hand:** download the ZIP again and do the same as above. The setup asks *installed. Update?* for your games: press **Enter**.
+- **HelixSR Desktop:** the app only notices new version numbers, so do it once by hand. Install the new HelixSR Desktop from the [latest release](https://github.com/lonewolf0622/HelixSR/releases/latest) (same version, over the old one), then **About** > **Versions: update, or go back to an older one** > pick the HelixSR version you have > **Download again**. When it has built, press **Repair** on each game.
+
 ## Settings
 
 HelixSR's settings are under `[HelixSR]` in the game's `OptiScaler.ini` (HelixSR Scaler writes them to `helixsr.ini` next to HelixSR's DLL, in the game's `HelixSR` folder, when the game starts). Restart the game after changing them. The upscaler and sharpening are picked in HelixSR Scaler's menu (Insert).
