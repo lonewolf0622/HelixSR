@@ -77,18 +77,23 @@ It also updates and removes HelixSR per game, shows each game's log for bug repo
    - **Windows:** double-click `helixsr-setup.bat`
    - **Linux / Steam Deck:** `./helixsr-setup.sh` (in a terminal, or double-click and choose *Run in terminal*)
 3. The first time, it asks before each download and builds everything on your PC: the upscaling network from NVIDIA's DLSS DLL (downloaded from NVIDIA), and HLX FSR 4's shaders from AMD's FSR 4 driver file (an installed AMD driver's copy on Windows, else read out of AMD's driver package, about 420 MB, nothing is installed). This takes a few minutes.
-4. It lists your games (Steam, Epic, GOG, Xbox, Heroic, Lutris) and asks for each one: *install? [s/f/n]*. Type **s** = HelixSR Scaler (pick **DLSS** in the game) or **f** = FSR drop-in (games with FSR 3.1: pick **AMD FSR** in the game) for the games you want; Enter skips a game.
+4. It lists your games (Steam, Epic, GOG, Xbox, Heroic, Lutris), numbered, with what each has (DLSS, FSR 3.1, XeSS) and what is installed. Type a game's number (or drag a game's folder into the window), then **Enter** to install it the recommended way, or **s** = HelixSR Scaler (pick **DLSS** in the game), **f** = FSR drop-in (games with FSR 3.1: pick **AMD FSR** in the game), **r** = remove. Pick as many games as you like; **Enter** on its own when done.
 5. Start the game. **Insert** opens HelixSR Scaler's menu (upscaler: HLX DLSS, HLX FSR 4, AMD FSR, XeSS; HelixSR's settings).
 
 **A game that is not listed:** run `./helixsr-setup.sh /path/to/game`, or drop the game's folder onto `helixsr-setup.bat` (Enter installs a game you name).
 
-**Update:** run the setup of the new version. For games that have HelixSR it asks *installed. Update? [Enter/s/f/r/n]*: Enter updates, **s** / **f** switches the way, **r** removes it. The app and the setup install the same way, so each can update or remove what the other installed.
+**Update:** run the setup of the new version and pick the games that have HelixSR (marked in the list): **Enter** updates, **s** / **f** switches the way, **r** removes it. The app and the setup install the same way, so each can update or remove what the other installed.
 
 ## Install by hand
 
-Run the setup once first (steps 1 to 3 above; press Enter at every game to skip it). The ZIP's DLLs only hold HelixSR's code: the setup builds the network into `HelixSR\helixsr.dll` and HLX FSR 4's shaders into `helixsr-scaler\OptiScaler\amd_fidelityfx_upscaler_dx12.dll` (and `HLX-FSR4\`). Copied straight out of the ZIP they have nothing to run, and HLX FSR 4 is then not offered at all.
+Run the setup once first (steps 1 to 3 above; at the game list press **Enter** on its own). The ZIP's DLLs only hold HelixSR's code: the setup builds the network into `HelixSR\helixsr.dll` and HLX FSR 4's shaders into `helixsr-scaler\OptiScaler\amd_fidelityfx_upscaler_dx12.dll` (and `HLX-FSR4\`). Copied straight out of the ZIP they have nothing to run, and HLX FSR 4 is then not offered at all.
 
-Then copy into the game's folder with its .exe (Unreal Engine games: `Binaries\Win64`):
+**One game at a time with a script** (it finds the HelixSR you set up and does the copying below for you):
+
+- **Linux / Steam Deck:** run `./setup_linux.sh` in the `helixsr-scaler` folder. It lists your games with DLSS, FSR or XeSS: type a game's number, or drag a game's folder into the window. To remove it, run `HelixSR-Scaler-remove.sh` in the game's folder.
+- **Windows:** download the HelixSR Scaler ZIP from the [HelixSR Scaler releases](https://github.com/lonewolf0622/HelixSR-Scaler/releases/latest), extract it into the game's folder (next to its .exe) and run `setup_windows.bat` there. To remove it, run `Remove_OptiScaler.bat` in the game's folder.
+
+**Or copy the files yourself** into the game's folder with its .exe (Unreal Engine games: `Binaries\Win64`):
 
 1. From `helixsr-scaler`:
    - `OptiScaler.dll`, renamed to **`dxgi.dll`** (if the game already has a `dxgi.dll`, name it `winmm.dll` or `version.dll` instead)
@@ -118,13 +123,13 @@ Your game settings are kept by every way of updating.
 
 **HelixSR Desktop:** when a new HelixSR is out, the app shows **Update HelixSR to x.y.z** at the top. Press it (it downloads and builds the new version, a few minutes), then press **Update** on each game. A new HelixSR Desktop shows its own update button the same way.
 
-**Setup scripts:** download the new ZIP, extract it (into a new folder, or over the old one) and run `helixsr-setup.bat` / `./helixsr-setup.sh` again. For each game that has HelixSR it asks *installed. Update?*: press **Enter**.
+**Setup scripts:** download the new ZIP, extract it (into a new folder, or over the old one) and run `helixsr-setup.bat` / `./helixsr-setup.sh` again. Pick each game that has HelixSR (marked in the list) and press **Enter**.
 
 **By hand:** run the new setup first, then copy the same files as in [Install by hand](#install-by-hand) over the old ones. Keep the game's `OptiScaler.ini` if you changed settings in it.
 
 **A release fixed under the same version** (for example the fixed 3.1.0 of 2026-10-28; the release notes say so):
 
-- **Setup scripts or by hand:** download the ZIP again and do the same as above. The setup asks *installed. Update?* for your games: press **Enter**.
+- **Setup scripts or by hand:** download the ZIP again and do the same as above. In the setup's list, pick your games and press **Enter** for each.
 - **HelixSR Desktop:** the app only notices new version numbers, so do it once by hand. Install the new HelixSR Desktop from the [latest release](https://github.com/lonewolf0622/HelixSR/releases/latest) (same version, over the old one), then **About** > **Versions: update, or go back to an older one** > pick the HelixSR version you have > **Download again**. When it has built, press **Repair** on each game.
 
 ## Settings
