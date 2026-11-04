@@ -6,6 +6,12 @@ HelixSR Freeware License in `LICENSE`. The download contains no NVIDIA or AMD so
 built from them; the setup gets NVIDIA's and AMD's files from them (or from the PC) and builds the network and HLX
 FSR 4's shaders locally.
 
+## The speed test (folder `timing-kit`)
+
+HelixSR Desktop's speed test (`helixsr-timing.exe`, `win10-helper.exe`) is a modified version of the FSR 4.1.1 timing kit by zgauthier2000
+(https://github.com/zgauthier2000/fsr4-shader-performance-overrides). Its complete source is in `timing-kit`, under the GNU General Public
+License, version 2 or later. The HelixSR Freeware License does not apply to it.
+
 ## HelixSR Scaler (folder `helixsr-scaler`)
 
 HelixSR Scaler is a separate GPL-3.0 program based on OptiScaler. The `helixsr-scaler` folder is HelixSR Scaler 2.1.0,

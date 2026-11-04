@@ -1,0 +1,17 @@
+Notice (the original kit's; see README.md for this modified version)
+======
+
+shaders/   AMD's FSR 4.1.1 compute shaders (from amd_fidelityfx_upscaler_dx12.dll 4.1.1.2740,
+           AMD FidelityFX SDK 2.3.0, MIT license, Copyright (C) Advanced Micro Devices, Inc.) as
+           vkd3d-proton translates them to SPIR-V, and versions of them modified by the scripts
+           of https://github.com/zgauthier2000/fsr4-shader-performance-overrides (GNU GPL v2 or
+           later). The "lossy" versions change the model's arithmetic and its output.
+           shaders/model_data.bin is the small data buffer FSR 4.1.1's model passes read their
+           output scales and offsets from (131072 bytes, as AMD's upscaler DLL fills it at run
+           time; same source and license as the shaders). It makes the output checks meaningful.
+bin/, src/ the benchmark programs, GNU GPL v2 or later.
+mesa/      a build of Mesa's RADV driver (https://mesa3d.org, MIT license) with the counter
+           printing of research/postpass-and-prepass/mesa-tiling-override.patch from the
+           repository above. Used only by the dot-product test of the default run and by "bash run.sh traffic".
+
+Not affiliated with or endorsed by AMD.

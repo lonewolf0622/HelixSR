@@ -26,6 +26,8 @@ official releases ("HelixSR"), except the parts listed in section 6.
    part of HelixSR and covered by this license: you may read and run them, but sections 2 and 3 apply to them too.
    Setup scripts in releases up to and including 1.8.1 remain under the license they were published with (Apache
    License, Version 2.0). Third-party files keep their own licenses.
+   The timing-kit folder (the source of HelixSR Desktop's speed test) is not covered by this license: it is under the GNU
+   General Public License, version 2 or later; see timing-kit/README.md and timing-kit/LICENSE.
 
 7. No warranty. HelixSR is provided "as is", without warranty of any kind, express or implied, including
    merchantability, fitness for a particular purpose and non-infringement. To the maximum extent permitted by law, the
