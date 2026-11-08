@@ -72,9 +72,8 @@ Around them:
 
 ## New in 3.3.0
 
-- **HLX FSR 4 Full on more GPUs:** on Windows too for the BC-250 and RDNA 1, and on RDNA 2 (RX 6000), RDNA 3 (RX 7000) and
-  the Steam Deck with faster forms of AMD's INT8 shaders (same picture). Its BC-250 kernels are about 2.5% faster, and its
-  files are half the size.
+- **HLX FSR 4 Full should work on more GPUs:** the BC-250 and RDNA 1 on Windows too, and RDNA 2 (RX 6000), RDNA 3 (RX 7000)
+  and the Steam Deck. Its BC-250 kernels are about 2.5% faster, and its files are half the size.
 - **HLX DLSS runs natively in Vulkan games** instead of through a DirectX 12 bridge.
 - **HLX FSR 4 in Vulkan games** through HelixSR Scaler.
 - **Preset K on Windows:** all of its layers run as DirectX 12 shaders now, and a new `Int8` setting uses 8-bit math on GPUs
