@@ -17,16 +17,16 @@
 </p>
 
 <p align="center">
-  <a href="#install-helixsr-desktop-recommended">Installation</a> ·
-  <a href="#gpus">GPU compatibility</a> ·
+  <a href="#whats-in-helixsr">What's in it</a> ·
+  <a href="#gpus">GPUs</a> ·
+  <a href="#install">Install</a> ·
   <a href="#performance">Performance</a> ·
   <a href="#troubleshooting">Troubleshooting</a> ·
-  <a href="#community">Community</a> ·
-  <a href="#support-helixsr">Support</a>
+  <a href="#community">Community</a>
 </p>
 
 <p align="center">
-  Windows &amp; Linux / Proton · Version 3.1.0 ·
+  Windows &amp; Linux / Proton · Version 3.3.0 ·
   <a href="LICENSE">HelixSR Freeware License</a>
 </p>
 
@@ -34,152 +34,184 @@
 
 # HelixSR
 
-**NVIDIA's DLSS Model E upscaler and AMD's FSR 4 network for GPUs that don't have them, focused on older GPUs.**
+**Modern AI upscaling for graphics cards that were left out of it.**
 
-HelixSR runs NVIDIA's DLSS Model E network as standard Direct3D 12 compute shaders, **without NVIDIA Tensor Cores, an NVIDIA driver, CUDA, or ROCm**. It behaves like DLSS: every quality mode from native (DLAA) to Ultra Performance, dynamic resolution. It comes as two upscalers:
+HelixSR runs NVIDIA's DLSS networks and AMD's FSR 4 networks as ordinary GPU compute shaders, so they work on cards that
+have no Tensor Cores, no FP8 and no official support: older AMD Radeon cards, the AMD BC-250, NVIDIA GTX cards and more.
+No NVIDIA driver, CUDA or ROCm is needed. It works in DirectX 12, DirectX 11 and Vulkan games, on Windows and on Linux
+(Proton, Steam Deck).
 
-- **HLX DLSS:** the DLSS Model E network, as HelixSR Scaler's DLSS upscaler (DirectX 12, and DirectX 11 and Vulkan games through HelixSR Scaler).
-- **HLX FSR 4:** AMD's FSR 4 network on HelixSR's own fast pipeline, as an upscaler of its own in HelixSR Scaler's list, or as a drop-in for games with FSR 3.1.
+You install it per game with **HelixSR Desktop** (an app) or the setup scripts. In the game you pick the game's own DLSS
+option, and switch between HelixSR's upscalers in an in-game menu (**Insert**).
 
 > [!IMPORTANT]
-> **HelixSR is focused on older graphics cards**, especially AMD RDNA 1 / RDNA 2 and the other older GPUs listed in [GPUs](#gpus). The goal is to help gamers get more from the hardware they already own. **RDNA 3 and newer GPUs may work, but they are not the focus of the project.**
-
-> [!NOTE]
-> **HelixSR 3.x has no frame generation of its own.** AMD FSR and Intel XeSS frame generation can be picked in HelixSR Scaler's menu. HelixSR 2.0.0's experimental DLSS frame generation is still on the releases page.
+> **HelixSR is made for older graphics cards.** It is developed and tested on the AMD BC-250 (gfx1013) under Linux.
+> Other GPUs and Windows are not tested by us; see [GPUs](#gpus) for what is expected to work.
 
 HelixSR is an independent, unofficial project and is **not affiliated with or endorsed by NVIDIA or AMD**.
 
-**Version 3.1.0**, available on Linux (Proton) and Windows. See [GPUs](#gpus) for compatibility and current testing status. Developed and tested on the AMD BC-250 (gfx1013, Linux, Mesa RADV); other GPUs and Windows are not tested by us.
+## What's in HelixSR
 
-## New in 3.1.0
+| Upscaler | Network | Character | Where you pick it |
+|---|---|---|---|
+| **HLX DLSS** (default) | NVIDIA DLSS Model E | Fast, stable, every quality mode from DLAA to Ultra Performance | the game's **DLSS** option |
+| **HLX DLSS, Preset K** (optional) | NVIDIA DLSS 4 Preset K | Sharper than Model E, about 2.5x its cost | HelixSR Scaler's **DLSS Upscaler** list |
+| **HLX FSR 4** | AMD FSR 4 Lite (FSR 4.1.2) | AMD's smaller FSR 4 network on HelixSR's own pipeline; fast | HelixSR Scaler's upscaler list, or as an FSR 3.1 drop-in |
+| **HLX FSR 4 Full** | AMD FSR 4 (FSR 4.1.2, full network) | The full FSR 4 picture; sharper and slower than HLX FSR 4 | HelixSR Scaler's upscaler list (BC-250, RDNA 1, RDNA 2, RDNA 3, Steam Deck) |
 
-- **HLX FSR 4 is an upscaler of its own** in HelixSR Scaler's list, next to AMD's FSR. On GPUs that have AMD's FSR 4, AMD's FSR 4 is listed again with its FSR 4 preset and model choices.
-- **HLX FSR 4 is faster on AMD GPUs** (a new prepass and post pass, the same picture bit for bit) and picks its INT8 path first on GTX 16.
-- **HLX DLSS in Vulkan games** through HelixSR Scaler, as in DirectX 11 games.
-- **GTX 10 (Pascal) on Windows:** HLX DLSS's faster conversions are back.
-- **The setup lists only games** (editors and tools from Windows' installed apps are no longer offered), and **Enter skips a game**: type **s** or **f** for the games you want.
-- **Games with anti-cheat** are treated like any other game.
-- **HelixSR Desktop 1.3.0 has a speed test:** it times HLX FSR 4 and HLX DLSS on your GPU and checks the picture. Send the results in an issue: it helps make HelixSR faster on your GPU.
+Around them:
 
-## Install: HelixSR Desktop (recommended)
+- **HelixSR Scaler**: HelixSR's version of [OptiScaler](https://github.com/optiscaler/OptiScaler) (GPL-3.0, [source](https://github.com/lonewolf0622/HelixSR-Scaler)).
+  It turns the game's DLSS, FSR or XeSS option into HLX DLSS and lists HelixSR's other upscalers next to AMD FSR and Intel
+  XeSS, including their frame generation.
+- **HelixSR Desktop**: sets HelixSR up once, installs, updates and removes it per game, and has a speed test.
 
-Download **HelixSR Desktop** from the [latest release](https://github.com/lonewolf0622/HelixSR/releases/latest) (Windows: the `.exe` installer; Linux / Steam Deck: the `.AppImage` or `.deb`) and run it. It sets HelixSR up on your PC once (a few minutes) and then installs it into your games with one button each:
+> [!NOTE]
+> **HelixSR 3.x has no frame generation of its own.** AMD FSR and Intel XeSS frame generation can be picked in HelixSR
+> Scaler's menu.
 
-- **HelixSR Scaler** for most games: HLX DLSS through the game's own DLSS, FSR or XeSS option, with HLX FSR 4 in its list and an in-game menu (Insert).
-- **FSR drop-in** for games with FSR 3.1 (under *Advanced*): only the game's FSR file is replaced with HLX FSR 4 (see below).
+## New in 3.3.0
 
-It also updates and removes HelixSR per game, shows each game's log for bug reports, puts back everything it replaced, and has a **speed test** (top bar).
+- **HLX FSR 4 Full on more GPUs:** on Windows too for the BC-250 and RDNA 1, and on RDNA 2 (RX 6000), RDNA 3 (RX 7000) and
+  the Steam Deck with faster forms of AMD's INT8 shaders (same picture). Its BC-250 kernels are about 2.5% faster, and its
+  files are half the size.
+- **HLX DLSS runs natively in Vulkan games** instead of through a DirectX 12 bridge.
+- **HLX FSR 4 in Vulkan games** through HelixSR Scaler.
+- **Preset K on Windows:** all of its layers run as DirectX 12 shaders now, and a new `Int8` setting uses 8-bit math on GPUs
+  with fast 8-bit dot products.
+- **NVIDIA GTX 10:** HLX DLSS and HLX FSR 4 are much faster under Linux / Proton (they now take the same 32-bit paths as on
+  Windows), and HLX DLSS's faster Quality output kernel runs over a wider range of resolutions.
+- HelixSR Scaler 2.3.0.
 
-## Install: setup scripts (without the app)
+The full notes, including known issues, are in each release.
 
-1. Download `HelixSR-3.1.0.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
+## GPUs
+
+| GPU | HLX DLSS | Preset K | HLX FSR 4 | HLX FSR 4 Full |
+|---|---|---|---|---|
+| **AMD BC-250** (our test GPU) | ✅ tested | ✅ tested | ✅ tested | ✅ tested (Linux) |
+| **AMD RDNA 1** (RX 5000) | ✓ expected | ✓ expected | ✓ expected | ✓ expected |
+| **AMD RDNA 2** (RX 6000, Steam Deck, Ryzen 6000 graphics) | ✓ expected, int8 | ✓ expected, int8 | ✓ expected | ✓ expected (INT8) |
+| **AMD RDNA 3 and newer** | may work | may work | may work | ✓ expected on RDNA 3 (INT8) |
+| **Radeon Vega / Radeon VII, RX 400 / 500** | experimental | – | experimental | – |
+| **NVIDIA GTX 16** | ✓ expected | ✓ expected | ✓ expected | – |
+| **NVIDIA GTX 10** | ✓ expected (32-bit path) | – | ✓ expected (32-bit path) | – |
+| **Intel Arc** | should work | should work | should work | – |
+
+"Expected" means the GPU gets its own tuned path but we have not run it ourselves. Reports help: open an issue with
+`helixsr.log`, or send the results of HelixSR Desktop's speed test.
+
+## Install
+
+### HelixSR Desktop (recommended)
+
+Download **HelixSR Desktop** from the [latest release](https://github.com/lonewolf0622/HelixSR/releases/latest) (Windows:
+the `.exe` installer; Linux / Steam Deck: the `.AppImage` or `.deb`) and run it. It sets HelixSR up on your PC once and then
+installs it into your games with one button each:
+
+- **HelixSR Scaler** for most games: HLX DLSS through the game's own DLSS, FSR or XeSS option, HelixSR's other upscalers in
+  its list, and an in-game menu (**Insert**).
+- **FSR drop-in** for games with FSR 3.1 (under *Advanced*): only the game's FSR file is replaced with HLX FSR 4.
+
+It also updates and removes HelixSR per game, shows each game's log for bug reports, puts back everything it replaced, and
+has a **speed test** (top bar).
+
+### Setup scripts (without the app)
+
+1. Download `HelixSR-3.3.0.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
 2. Close your games and run the setup in that folder:
    - **Windows:** double-click `helixsr-setup.bat`
    - **Linux / Steam Deck:** `./helixsr-setup.sh` (in a terminal, or double-click and choose *Run in terminal*)
-3. The first time, it asks before each download and builds everything on your PC: the upscaling network from NVIDIA's DLSS DLL (downloaded from NVIDIA), and HLX FSR 4's shaders from AMD's FSR 4 driver file (an installed AMD driver's copy on Windows, else read out of AMD's driver package, about 420 MB, nothing is installed). This takes a few minutes.
-4. It lists your games (Steam, Epic, GOG, Xbox, Heroic, Lutris), numbered, with what each has (DLSS, FSR 3.1, XeSS) and what is installed. Type a game's number (or drag a game's folder into the window), then **Enter** to install it the recommended way, or **s** = HelixSR Scaler (pick **DLSS** in the game), **f** = FSR drop-in (games with FSR 3.1: pick **AMD FSR** in the game), **r** = remove. Pick as many games as you like; **Enter** on its own when done.
-5. Start the game. **Insert** opens HelixSR Scaler's menu (upscaler: HLX DLSS, HLX FSR 4, AMD FSR, XeSS; HelixSR's settings).
+3. The first time, it asks before each download and builds HLX DLSS on your PC from NVIDIA's DLSS DLL (downloaded from
+   NVIDIA). It asks whether to build Preset K too. This takes a while; what it builds is kept, so later releases reuse it.
+4. It lists your games (Steam, Epic, GOG, Xbox, Heroic, Lutris), numbered, with what each has (DLSS, FSR 3.1, XeSS) and what
+   is installed. Type a game's number (or drag a game's folder into the window), then **Enter** to install it the recommended
+   way, or **s** = HelixSR Scaler (pick **DLSS** in the game), **f** = FSR drop-in (games with FSR 3.1: pick **AMD FSR** in
+   the game), **r** = remove. Pick as many games as you like; **Enter** on its own when done.
+5. Start the game. **Insert** opens HelixSR Scaler's menu.
 
-**A game that is not listed:** run `./helixsr-setup.sh /path/to/game`, or drop the game's folder onto `helixsr-setup.bat` (Enter installs a game you name).
+**A game that is not listed:** run `./helixsr-setup.sh /path/to/game`, or drop the game's folder onto `helixsr-setup.bat`.
 
-**Update:** run the setup of the new version and pick the games that have HelixSR (marked in the list): **Enter** updates, **s** / **f** switches the way, **r** removes it. The app and the setup install the same way, so each can update or remove what the other installed.
+### By hand
 
-## Install by hand
+Run the setup once first (steps 1 to 3 above; at the game list press **Enter** on its own): it builds HLX DLSS into
+`HelixSR\helixsr.dll`. Then copy into the game's folder with its .exe (Unreal Engine games: `Binaries\Win64`):
 
-Run the setup once first (steps 1 to 3 above; at the game list press **Enter** on its own). The ZIP's DLLs only hold HelixSR's code: the setup builds the network into `HelixSR\helixsr.dll` and HLX FSR 4's shaders into `helixsr-scaler\OptiScaler\amd_fidelityfx_upscaler_dx12.dll` (and `HLX-FSR4\`). Copied straight out of the ZIP they have nothing to run, and HLX FSR 4 is then not offered at all.
-
-**One game at a time with a script** (it finds the HelixSR you set up and does the copying below for you):
-
-- **Linux / Steam Deck:** run `./setup_linux.sh` in the `helixsr-scaler` folder. It lists your games with DLSS, FSR or XeSS: type a game's number, or drag a game's folder into the window. To remove it, run `HelixSR-Scaler-remove.sh` in the game's folder.
-- **Windows:** download the HelixSR Scaler ZIP from the [HelixSR Scaler releases](https://github.com/lonewolf0622/HelixSR-Scaler/releases/latest), extract it into the game's folder (next to its .exe) and run `setup_windows.bat` there. To remove it, run `Remove_OptiScaler.bat` in the game's folder.
-
-**Or copy the files yourself** into the game's folder with its .exe (Unreal Engine games: `Binaries\Win64`):
-
-1. From `helixsr-scaler`:
-   - `OptiScaler.dll`, renamed to **`dxgi.dll`** (if the game already has a `dxgi.dll`, name it `winmm.dll` or `version.dll` instead)
-   - `OptiScaler.ini`
-   - the whole `OptiScaler` folder. It already holds HLX FSR 4 as `amd_fidelityfx_upscaler_dx12.dll` next to AMD's original as `amd_fidelityfx_upscaler_dx12.amd.dll`: keep both, don't replace either with another FSR DLL.
-2. The whole **`HelixSR`** folder (`helixsr.dll`, `helixsr.ini`), next to `dxgi.dll`, not inside the `OptiScaler` folder.
+1. From `helixsr-scaler`: `OptiScaler.dll` renamed to **`dxgi.dll`** (if the game already has a `dxgi.dll`, name it
+   `winmm.dll` or `version.dll` instead), `OptiScaler.ini`, and the whole `OptiScaler` folder (it holds HLX FSR 4 and
+   HLX FSR 4 Full; keep its files as they are).
+2. The whole **`HelixSR`** folder, next to `dxgi.dll`.
 
 ```
 Game\
   game.exe
   dxgi.dll            (OptiScaler.dll, renamed)
   OptiScaler.ini
-  OptiScaler\         (HLX FSR 4 + AMD's FSR DLLs, XeSS, ...)
-  HelixSR\            (helixsr.dll = HLX DLSS, helixsr.ini)
+  OptiScaler\         (HLX FSR 4, HLX FSR 4 Full, AMD FSR, XeSS, ...)
+  HelixSR\            (helixsr.dll = HLX DLSS, helixsr.ini; k\ = Preset K if you built it)
 ```
 
-Pick **DLSS** in the game for HLX DLSS; pick HLX FSR 4 (or another upscaler) in HelixSR Scaler's menu (**Insert**). On Linux, `dxgi.dll` needs no launch option; with `winmm.dll` or `version.dll` add `WINEDLLOVERRIDES="winmm=n,b" %command%` (or `version=n,b`) to the game's launch options.
-
-- **HLX FSR 4 alone** (games with FSR 3.1, without HelixSR Scaler): the `fsr3-drop-in` folder the setup makes holds HLX FSR 4 under both FSR 3.1 file names (its `README.txt` has the details).
-- **Frame generation** needs more files: install it with the app or the setup.
-- **Remove:** delete these files and folders again.
-- **Something does not work?** `OptiScaler.log` and `HelixSR\helixsr.log` in the game folder say what happened; attach them to an issue.
+On Linux, `dxgi.dll` needs no launch option; with `winmm.dll` or `version.dll` add `WINEDLLOVERRIDES="winmm=n,b" %command%`
+(or `version=n,b`) to the game's launch options. For one game at a time there are scripts in `helixsr-scaler`
+(`setup_linux.sh`), and on Windows the [HelixSR Scaler release](https://github.com/lonewolf0622/HelixSR-Scaler/releases/latest)
+has `setup_windows.bat`.
 
 ## Update
 
-Your game settings are kept by every way of updating.
+- **HelixSR Desktop:** when a new version is out, the app shows **Update HelixSR to x.y.z** at the top; press it, then
+  **Update** on each game.
+- **Setup scripts:** extract the new ZIP and run the setup again; pick each game that has HelixSR (marked in the list) and
+  press **Enter**.
+- **By hand:** run the new setup, then copy the same files over the old ones. Keep the game's `OptiScaler.ini` if you changed it.
 
-**HelixSR Desktop:** when a new HelixSR is out, the app shows **Update HelixSR to x.y.z** at the top. Press it (it downloads and builds the new version, a few minutes), then press **Update** on each game. A new HelixSR Desktop shows its own update button the same way.
-
-**Setup scripts:** download the new ZIP, extract it (into a new folder, or over the old one) and run `helixsr-setup.bat` / `./helixsr-setup.sh` again. Pick each game that has HelixSR (marked in the list) and press **Enter**.
-
-**By hand:** run the new setup first, then copy the same files as in [Install by hand](#install-by-hand) over the old ones. Keep the game's `OptiScaler.ini` if you changed settings in it.
-
-**A release fixed under the same version** (for example the fixed 3.1.0 of 2026-10-28; the release notes say so):
-
-- **Setup scripts or by hand:** download the ZIP again and do the same as above. In the setup's list, pick your games and press **Enter** for each.
-- **HelixSR Desktop:** the app only notices new version numbers, so do it once by hand. Install the new HelixSR Desktop from the [latest release](https://github.com/lonewolf0622/HelixSR/releases/latest) (same version, over the old one), then **About** > **Versions: update, or go back to an older one** > pick the HelixSR version you have > **Download again**. When it has built, press **Repair** on each game.
+Your game settings are kept every way.
 
 ## Settings
 
-HelixSR's settings are under `[HelixSR]` in the game's `OptiScaler.ini` (HelixSR Scaler writes them to `helixsr.ini` next to HelixSR's DLL, in the game's `HelixSR` folder, when the game starts). Restart the game after changing them. The upscaler and sharpening are picked in HelixSR Scaler's menu (Insert).
+The upscaler and sharpening are picked in HelixSR Scaler's menu (**Insert**). Restart the game after changing a file.
 
-- `Int8`: `auto` (8-bit math on GPUs with fast int8 dot products), `on` or `off`.
-- `WaveSize`: `auto`, `64` or `32`. Leave it on `auto` unless the picture is broken.
-- With the FSR drop-in, HelixSR's `helixsr.ini` sits next to the game's FSR DLL.
-
-## Uninstall
-
-Run `helixsr-uninstall.bat` (Windows) or `./helixsr-uninstall.sh` (Linux), or remove HelixSR in HelixSR Desktop. Every file is put back as it was; at the end the uninstaller can also delete what the setup built and its downloads.
-
-## Troubleshooting
-
-- **Red border around the image, low resolution, shaking image:** HelixSR's network is not running. `helixsr.log` (in the game's `HelixSR` folder) says why. Run the setup again.
-- **HLX FSR 4:** with HelixSR Scaler it writes to `OptiScaler.log` next to the game's `.exe`; as the FSR drop-in, to `HLX_FSR.log` next to its DLL.
-- **The game no longer starts or crashes:** remove HelixSR (app or uninstaller), or verify the game's files in Steam.
-- **Something else looks wrong:** open an issue with `helixsr.log`.
-
-## GPUs
-
-- **AMD RDNA 1 and the BC-250:** HLX DLSS and HLX FSR 4. The BC-250 is our test GPU.
-- **AMD RDNA 2** (RX 6000, Steam Deck, RDNA 2-based Ryzen graphics): HLX DLSS with 8-bit math (int8) where it helps, HLX FSR 4.
-- **AMD RDNA 3 and newer** (including RX 7000 / 9000 and newer Ryzen graphics): may work, but are **not the focus of the project**. Compatibility, performance, and frame-generation quality are not guaranteed.
-- **Radeon Vega / Radeon VII, RX 400 / 500 (experimental):** 64-lane shaders, chosen automatically. Not tested on real hardware: please open an issue with `helixsr.log`.
-- **NVIDIA GTX 10 / 16 series and Intel Arc (should work, not fully tested):** GTX 10 uses 32-bit paths; GTX 16 uses HLX FSR 4's INT8 path. Please open an issue with `helixsr.log` and how it went, or the speed test's results.
-- DirectX 11 and Vulkan games get upscaling through HelixSR Scaler.
-
-## How it works
-
-**This is NVIDIA's network running on different hardware, not a newly trained model.** HelixSR answers the game exactly as DLSS would: DLSS's camera jitter, DLSS's render sizes per quality mode, the game's masks and exposure as DLSS uses them. Packed FP16 arithmetic makes the output close to, but not bit-identical with, NVIDIA's. HLX FSR 4 likewise runs AMD's FSR 4 network, built on your PC from AMD's driver file.
+- **HLX DLSS:** `[HelixSR]` in the game's `OptiScaler.ini` (copied to `HelixSR\helixsr.ini` when the game starts):
+  `Int8` = `auto` / `on` / `off`, `WaveSize` = `auto` / `64` / `32` (leave on `auto` unless the picture is broken).
+- **Preset K:** `HelixSR\k\helixsr.ini`: `Int8` = `auto` / `on` / `off`; `DeepReuse` = `Exact` (default), `1:2` or `1:4`
+  (the deeper layers every second or fourth frame: faster, with some loss in motion).
+- **HLX FSR 4 Full:** `OptiScaler\custom\HLX FSR 4 Full\ffx\hlx_fsr4.ini`: `DeepReuse` = `exact` (default), `1:2` or `1:4`
+  (BC-250 and RDNA 1 only).
 
 ## Performance
 
-GPU time per frame on the **BC-250** (HelixSR 3.1.0, Quality mode, the speed test's method):
+GPU time per frame on the **BC-250** (about 2 GHz, Quality mode):
 
-| Output | HLX DLSS | HLX FSR 4 |
-|---|---:|---:|
-| 1920x1080 | 1.04 ms | 1.10 ms |
-| 2560x1440 | 1.60 ms | 1.90 ms |
-| 3840x2160 | 3.40 ms | 4.21 ms |
+| Output | HLX DLSS | Preset K | HLX FSR 4 | HLX FSR 4 Full |
+|---|---:|---:|---:|---:|
+| 1920x1080 | 1.04 ms | 2.55 ms | 1.10 ms | 2.1 ms |
+| 2560x1440 | 1.60 ms | 4.24 ms | 1.90 ms | 3.7 ms |
+| 3840x2160 | 3.40 ms | 8.67 ms | 4.21 ms | 8.0 ms |
 
-**On other GPUs:** [AMD Radeon RX 5700 XT, Red Dead Redemption 2 (Windows)](https://lonewolf0622.github.io/HelixSR/comparisons/rx-5700-xt-rdr2/): HLX DLSS, HLX FSR 4 and FSR 3.1.5 timed in the game, with zoomed side-by-side and slider comparisons.
+Preset K and HLX FSR 4 Full at their default `Exact` / `exact`.
 
-## Limitations
+**On other GPUs:** [AMD Radeon RX 5700 XT (Windows)](https://lonewolf0622.github.io/HelixSR/comparisons/rx-5700-xt-rdr2/):
+HLX DLSS, HLX FSR 4 and FSR 3.1.5 timed in a game, with side-by-side and slider comparisons.
 
-- **No HelixSR frame generation in 3.x** (AMD FSR and XeSS frame generation are in HelixSR Scaler's menu).
-- **Older GPUs are the project's focus.** RDNA 3 and newer may work, but are not the project's development focus; see [GPUs](#gpus).
+## How it works
+
+**These are NVIDIA's and AMD's own networks running on different hardware, not newly trained models.** HelixSR answers the
+game exactly as DLSS would (its camera jitter, render sizes per quality mode, masks and exposure) and runs each network with
+its own compute kernels, written for GPUs without matrix hardware: packed 16-bit math where a GPU has it, 32-bit math where it
+doesn't, 8-bit dot products where they help. The output is close to, but not bit-identical with, NVIDIA's and AMD's own; HLX FSR 4 Full's
+8-bit path on RDNA 2 / RDNA 3 gives the same picture as AMD's.
+
+## Troubleshooting
+
+- **Red border around the image, low resolution, shaking image:** HLX DLSS's network is not running. `HelixSR\helixsr.log`
+  in the game folder says why; run the setup again.
+- **HLX FSR 4 / HLX FSR 4 Full:** they write to `OptiScaler.log` next to the game's .exe (as the FSR drop-in: `HLX_FSR.log`).
+- **The game no longer starts or crashes:** remove HelixSR (app or uninstaller), or verify the game's files in Steam.
+- **Anything else:** open an issue with `helixsr.log` and `OptiScaler.log`.
+
+## Uninstall
+
+Run `helixsr-uninstall.bat` (Windows) or `./helixsr-uninstall.sh` (Linux), or remove HelixSR in HelixSR Desktop. Every file is
+put back as it was; at the end the uninstaller can also delete what the setup built and its downloads.
 
 ## Community
 
@@ -189,11 +221,13 @@ GPU time per frame on the **BC-250** (HelixSR 3.1.0, Quality mode, the speed tes
 
 [Join our Discord](https://discord.gg/XwxcPD4GR) for setup help, testing feedback, and release discussions.
 
-For reproducible bugs, [open a GitHub issue](https://github.com/lonewolf0622/HelixSR/issues) with your GPU, operating system, game, installation method, and `helixsr.log`. Include the HelixSR version you tested. Check logs for personal information before posting them publicly.
+For reproducible bugs, [open a GitHub issue](https://github.com/lonewolf0622/HelixSR/issues) with your GPU, operating system,
+game, installation method, HelixSR version and `helixsr.log`. Check logs for personal information before posting them.
 
 ## Support HelixSR
 
-If HelixSR has helped you get more from your GPU, consider supporting its continued development, testing, and compatibility improvements. Contributions are optional and appreciated.
+If HelixSR has helped you get more from your GPU, consider supporting its development and testing. Contributions are
+optional and appreciated.
 
 [Support HelixSR via PayPal](https://www.paypal.com/donate/?business=WL2384PF9Z9W6&no_recurring=0&currency_code=USD)
 
@@ -201,6 +235,14 @@ If HelixSR has helped you get more from your GPU, consider supporting its contin
 
 ## License and legal
 
-HelixSR is free to use under the **HelixSR Freeware License** (`LICENSE`); its source code is not published. The license covers the HelixSR DLL, HLX FSR 4's DLL, their documentation and the setup scripts (`helixsr-setup.*`, `helixsr-uninstall.*` and the `setup` folder): you may use them free of charge and redistribute them only unmodified, complete as an official release and free of charge; you may read and run the setup scripts but not modify them (setup scripts published up to 1.8.1 keep their Apache 2.0 license). HelixSR contains a small amount of AMD FidelityFX material under the MIT license; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [SOURCE.md](SOURCE.md).
+HelixSR is free to use under the **HelixSR Freeware License** (`LICENSE`); its source code is not published. The license
+covers HelixSR's DLLs, HLX FSR 4's and HLX FSR 4 Full's DLLs, their documentation and the setup scripts: you may use them free
+of charge and redistribute them only unmodified, complete as an official release and free of charge. HelixSR Scaler is a
+separate program under GPL-3.0. HelixSR contains AMD FidelityFX material under the MIT license; see
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [SOURCE.md](SOURCE.md).
 
-DLSS and associated NVIDIA technologies are trademarks and intellectual property of NVIDIA Corporation. **The HelixSR download contains none of NVIDIA's network weights or translated kernels:** the setup downloads NVIDIA's DLSS DLL from NVIDIA's GitHub (under NVIDIA's license, after asking you) or uses a copy you already have, and builds the upscaling network on your PC. The resulting network remains NVIDIA's property and is not covered by HelixSR's license; do not redistribute the DLL the setup builds. The same goes for HLX FSR 4's shaders, which the setup builds from AMD's FSR 4 driver file.
+DLSS and associated NVIDIA technologies are trademarks and intellectual property of NVIDIA Corporation. **The HelixSR download
+contains none of NVIDIA's network weights or translated kernels:** the setup downloads NVIDIA's DLSS DLL from NVIDIA's GitHub
+(under NVIDIA's license, after asking you) or uses a copy you already have, and builds the network on your PC. The result
+remains NVIDIA's property and is not covered by HelixSR's license; do not redistribute what the setup builds. FSR is a
+trademark of AMD; HLX FSR 4 and HLX FSR 4 Full are built from AMD's FidelityFX SDK (MIT).
