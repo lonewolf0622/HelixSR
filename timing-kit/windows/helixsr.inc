@@ -81,6 +81,12 @@ static bool HelixNgxPrepare(const char* name) {
     snprintf(src, sizeof(src), "dlls\\%s\\helixsr.ini", from);
     snprintf(ini, sizeof(ini), "dlls\\%s\\helixsr.ini", name);
     CopyFileA(src, ini, FALSE);      // a release without one: the lines below make it
+    static const char* const extra[] = {"helixsr_modelk_kernels.pak", "helixsr_modelk_weights.bin"};   // Preset K's files
+    for (int e = 0; e < 2; ++e) {
+        char es[MAX_PATH], ed[MAX_PATH];
+        snprintf(es, sizeof(es), "dlls\\%s\\%s", from, extra[e]); snprintf(ed, sizeof(ed), "dlls\\%s\\%s", name, extra[e]);
+        if (GetFileAttributesA(es) != INVALID_FILE_ATTRIBUTES) CopyFileA(es, ed, FALSE);
+    }
     GetFullPathNameA(ini, MAX_PATH, iniFull, NULL);
     rewind(f);
     while (fgets(line, sizeof(line), f)) {
@@ -100,6 +106,8 @@ static void HelixNgxCleanup(const char* name) {
     char p[MAX_PATH];
     snprintf(p, sizeof(p), "dlls\\%s\\helixsr.dll", name); DeleteFileA(p);   // a run that still holds it: left in place
     snprintf(p, sizeof(p), "dlls\\%s\\helixsr.ini", name); DeleteFileA(p);
+    snprintf(p, sizeof(p), "dlls\\%s\\helixsr_modelk_kernels.pak", name); DeleteFileA(p);
+    snprintf(p, sizeof(p), "dlls\\%s\\helixsr_modelk_weights.bin", name); DeleteFileA(p);
 }
 
 static bool HelixIsNgx(const char* name, char* dll, size_t n) {
@@ -247,7 +255,7 @@ static int RunNgx(const char* name, const char* dllpath, bool quick) {
                 NgxSetI(&prm, "Reset", frame == 0);
                 ID3D12GraphicsCommandList_EndQuery(list, qh, D3D12_QUERY_TYPE_TIMESTAMP, 0);
                 const int er = evaluate(list, feature, obj, NULL);
-                if (er != 1) { Say("R|%s|FAILED|evaluate 0x%08x at %s\n", name, (unsigned)er, sz); return 1; }
+                if (er != 1) { KitDebugDump(); KitHelixDiag(name); Say("R|%s|FAILED|evaluate 0x%08x at %s\n", name, (unsigned)er, sz); return 1; }
                 ID3D12GraphicsCommandList_EndQuery(list, qh, D3D12_QUERY_TYPE_TIMESTAMP, 1);
                 ID3D12GraphicsCommandList_ResolveQueryData(list, qh, D3D12_QUERY_TYPE_TIMESTAMP, 0, 2, qbuf, 0);
                 Submit();
@@ -262,6 +270,7 @@ static int RunNgx(const char* name, const char* dllpath, bool quick) {
             double sum = 0, fastest = ms[0];
             for (int i = 0; i < TIMED; ++i) { sum += ms[i]; if (ms[i] < fastest) fastest = ms[i]; }
             const double med = Median(ms, TIMED);
+            KitDebugDump();   // (a run with the debug layer on: its messages, also when nothing failed)
             char key[256], pkey[64];
             snprintf(key, sizeof(key), "%s|HLX DLSS|%s|%s", name, sz, scene ? "moving" : "still");
             snprintf(pkey, sizeof(pkey), "%s|%ux%u|%s", sz, rw, rh, scene ? "moving" : "still");

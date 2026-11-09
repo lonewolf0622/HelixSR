@@ -44,6 +44,7 @@
 #include <winver.h>
 #include <winhttp.h>
 #include <d3d12.h>
+#include <d3d12sdklayers.h>
 #include <dxgi1_6.h>
 #include <math.h>
 #include <stdarg.h>
@@ -123,13 +124,64 @@ static LONG WINAPI Crashed(EXCEPTION_POINTERS* e) {
     return EXCEPTION_EXECUTE_HANDLER;
 }
 
+static void KitFail(const char* what, HRESULT hr, int line);   // a failed D3D12 call: the reason (device removed, debug layer), then exit
 #define CHECK(x)                                                                                              \
     do {                                                                                                      \
         HRESULT hr_ = (x);                                                                                    \
-        if (FAILED(hr_)) { Say("FAILED %s: 0x%08lx (line %d)\n", #x, (unsigned long)hr_, __LINE__); exit(1); } \
+        if (FAILED(hr_)) KitFail(#x, hr_, __LINE__);                                                          \
     } while (0)
 
 static ID3D12Device* device;
+// HelixSR: a run whose kit-env.txt has KIT_D3D12_DEBUG=1 turns on Microsoft's D3D12 debug layer when Windows has it (Graphics Tools);
+// its messages (errors and warnings, each kind once) become D| lines, and the first error goes into a failed run's reason
+static ID3D12InfoQueue* kit_iq;
+static char kit_diag[12288]; static size_t kit_diag_len;   // the summary's diagnostics section (X| lines)
+static char kit_first_error[600];
+static void KitDebugDump(void) {
+    if (!kit_iq) return;
+    static int seen[64], nseen;
+    const UINT64 n = ID3D12InfoQueue_GetNumStoredMessages(kit_iq);
+    for (UINT64 i = 0; i < n; ++i) {
+        SIZE_T len = 0;
+        if (FAILED(ID3D12InfoQueue_GetMessage(kit_iq, i, NULL, &len)) || !len || len > 65536) continue;
+        D3D12_MESSAGE* m = (D3D12_MESSAGE*)malloc(len);
+        if (m && SUCCEEDED(ID3D12InfoQueue_GetMessage(kit_iq, i, m, &len)) && m->Severity <= D3D12_MESSAGE_SEVERITY_WARNING) {
+            int dup = 0;
+            for (int k = 0; k < nseen; ++k) dup |= seen[k] == (int)m->ID;
+            if (!dup && nseen < 64) {
+                seen[nseen++] = (int)m->ID;
+                Say("X|%s|%s|%d|%.*s\n", run_name, m->Severity <= D3D12_MESSAGE_SEVERITY_ERROR ? "error" : "warning", (int)m->ID,
+                    (int)(m->DescriptionByteLength > 500 ? 500 : m->DescriptionByteLength), m->pDescription);
+                if (m->Severity <= D3D12_MESSAGE_SEVERITY_ERROR && !kit_first_error[0])
+                    snprintf(kit_first_error, sizeof(kit_first_error), "%.*s", (int)(m->DescriptionByteLength > 400 ? 400 : m->DescriptionByteLength), m->pDescription);
+            }
+        }
+        free(m);
+    }
+    ID3D12InfoQueue_ClearStoredMessages(kit_iq);
+}
+// HelixSR's diagnostic lines (diag:, ERROR) from the log next to a run's helixsr.dll, as D| lines
+static void KitHelixDiag(const char* name) {
+    char p[MAX_PATH], ln[1024];
+    snprintf(p, sizeof(p), "dlls\\%s\\helixsr.log", name);
+    FILE* f = fopen(p, "r");
+    int n = 0;
+    while (f && fgets(ln, sizeof(ln), f) && n < 40) {
+        ln[strcspn(ln, "\r\n")] = 0;
+        if (strstr(ln, "diag:") || strstr(ln, "ERROR") || strstr(ln, "has no resource") || strstr(ln, "above the D3D12")) { Say("X|%s|helixsr|0|%s\n", name, ln); ++n; }
+    }
+    if (f) fclose(f);
+}
+static void KitFail(const char* what, HRESULT hr, int line) {
+    const HRESULT why = device ? ID3D12Device_GetDeviceRemovedReason(device) : S_OK;
+    KitDebugDump();
+    KitHelixDiag(run_name);
+    char removed[64] = "";
+    if (why != S_OK) snprintf(removed, sizeof(removed), "; device removed, reason 0x%08lx", (unsigned long)why);
+    Say("FAILED %s: 0x%08lx (line %d)\n", what, (unsigned long)hr, line);
+    Say("R|%s|FAILED|%s failed 0x%08lx%s%s%s\n", run_name, what, (unsigned long)hr, removed, kit_first_error[0] ? "; D3D12: " : "", kit_first_error);
+    exit(1);
+}
 static ID3D12CommandQueue* queue;
 static ID3D12CommandAllocator* allocator;
 static ID3D12GraphicsCommandList* list;
@@ -448,7 +500,19 @@ static void CreateDevice(char* gpu, size_t gpu_len) {
     IDXGIAdapter1* ad = NULL;
     if (SUCCEEDED(CreateDXGIFactory1(&IID_IDXGIFactory6, (void**)&f6)))
         IDXGIFactory6_EnumAdapterByGpuPreference(f6, 0, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, &IID_IDXGIAdapter1, (void**)&ad);
+    const char* dbg = getenv("KIT_D3D12_DEBUG");
+    if (dbg && *dbg == '1') {
+        ID3D12Debug* d = NULL;
+        if (SUCCEEDED(D3D12GetDebugInterface(&IID_ID3D12Debug, (void**)&d)) && d) { ID3D12Debug_EnableDebugLayer(d); ID3D12Debug_Release(d); }
+    }
     CHECK(D3D12CreateDevice((IUnknown*)ad, D3D_FEATURE_LEVEL_12_0, &IID_ID3D12Device, (void**)&device));
+    if (dbg && *dbg == '1') {
+        if (SUCCEEDED(ID3D12Device_QueryInterface(device, &IID_ID3D12InfoQueue, (void**)&kit_iq)) && kit_iq) {
+            ID3D12InfoQueue_SetMessageCountLimit(kit_iq, 4096);
+            Say("X|%s|kit|0|D3D12 debug layer on\n", run_name);
+        } else
+            Say("X|%s|kit|0|D3D12 debug layer not available (Windows: Settings > Optional features > Graphics Tools)\n", run_name);
+    }
     snprintf(gpu, gpu_len, "?");
     if (ad) {
         DXGI_ADAPTER_DESC1 d;
@@ -1231,6 +1295,10 @@ static int Collect(const char* raw, struct Row* rows, int max, char* gpu, size_t
             continue;
         }
         if (line[0] == 'P' && line[1] == '|') { if (np < 4096) snprintf(plines[np++], sizeof(plines[0]), "%s", line); continue; }
+        if (line[0] == 'X' && line[1] == '|') {      // HelixSR diagnostics (D3D12 debug layer, helixsr.log): each line once, into the summary
+            if (!strstr(kit_diag, line + 2) && kit_diag_len + strlen(line + 2) + 2 < sizeof(kit_diag)) kit_diag_len += snprintf(kit_diag + kit_diag_len, sizeof(kit_diag) - kit_diag_len, "%s\n", line + 2);
+            continue;
+        }
         if (line[0] != 'R' || line[1] != '|') continue;
         if (strstr(line, "|FAILED|")) {      // each failure once (a DLL that fails every round gave one line per round: a GTX 1660 SUPER report of
                                              // 2026-10-18 filled the list and cut its last line), and only whole lines
@@ -1295,6 +1363,14 @@ static void RunDll(const char* name, int inpack, const char* base, const char* r
             return;
         }
     } else if (!HelixIsNgx(name, cmd, sizeof(cmd)) && (HelixDllFrom(name, src, sizeof(src)), !CopyFileA(src, "amd_fidelityfx_upscaler_dx12.dll", FALSE))) { printf("%s: no amd_fidelityfx_upscaler_dx12.dll in that folder, skipped\n", name); return; }
+    // HelixSR: files a folder's DLL loads next to itself (HLX FSR 4 Full: AMD's FSR as fsr4_full.dll, and its settings), for this run only
+    static const char* const besides[] = {"fsr4_full.dll", "hlx_fsr4.ini"};
+    bool placed[2] = {false, false};
+    for (int b = 0; b < 2 && inpack < 0; ++b) {
+        char bs[MAX_PATH];
+        snprintf(bs, sizeof(bs), "dlls\\%s\\%s", name, besides[b]);
+        placed[b] = GetFileAttributesA(bs) != INVALID_FILE_ATTRIBUTES && CopyFileA(bs, besides[b], FALSE);
+    }
     printf("%s %s ...\n", name, what); fflush(stdout);
     snprintf(cmd, sizeof(cmd), "\"%s%s\" --run \"%s\" \"%s\"%s%s", base, child_exe, name, raw, quick ? " quick" : " full", all_presets ? " all" : "");
     STARTUPINFOA si = {.cb = sizeof(si)};
@@ -1302,7 +1378,7 @@ static void RunDll(const char* name, int inpack, const char* base, const char* r
     HelixEnv(name, true);      // HelixSR: the folder's kit-env.txt for this run
     const BOOL started_run = CreateProcessA(NULL, cmd, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi);
     HelixEnv(name, false);
-    if (!started_run) { printf("could not start a run for %s\n", name); if (ngxCopy) HelixNgxCleanup(name); return; }
+    if (!started_run) { printf("could not start a run for %s\n", name); if (ngxCopy) HelixNgxCleanup(name); for (int b = 0; b < 2; ++b) if (placed[b]) DeleteFileA(besides[b]); return; }
     const char* lim = getenv("FSR4TIME_LIMIT");
     const DWORD limit = lim && atoi(lim) > 0 ? (DWORD)atoi(lim) * 1000u : RunLimit();
     const ULONGLONG started = GetTickCount64();
@@ -1327,6 +1403,7 @@ static void RunDll(const char* name, int inpack, const char* base, const char* r
     }
     CloseHandle(pi.hProcess); CloseHandle(pi.hThread);
     if (ngxCopy) HelixNgxCleanup(name);
+    for (int b = 0; b < 2; ++b) if (placed[b]) DeleteFileA(besides[b]);
     fflush(stdout);
 }
 // A report ID: names one report in the channel, the results file and anything the tester writes about it (8 hex digits, from the clock,
@@ -1618,6 +1695,7 @@ int main(int argc, char** argv) {
         ADD("\n");
     }
     if (fl) ADD("did not run:\n%s", fails);
+    if (kit_diag_len) ADD("diagnostics:\n%s", kit_diag);
     printf("\n=== summary\n%s", summary);
 #ifndef HELIXSR_KIT
     if (!unattended) {
