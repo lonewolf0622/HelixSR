@@ -297,7 +297,7 @@ static void DeleteBlockRecords(void) {      // the records the first runs leave 
 // values (the color clamped to 0..1, a 2.2 gamma, 0..255: what a screen would show, so rounding that no screen shows comes out identical).
 // Every other DLL compares its own last frame with each file there and reports: dB (PSNR, 255 = full scale), the share of values more than one
 // display level apart, and the largest difference in levels. The files (up to about 25 MB each at 4K) are deleted when the run ends.
-static const char* REFS[] = {"1-amd-shaders", "1b-amd-shaders-dots-split"};
+static const char* REFS[] = {"0-amd-fsr4", "1b-amd-shaders-dots-split"};   // 0-amd-fsr4: HelixSR Desktop's folder for AMD's DLL
 static uint8_t* DisplayLut(void) {      // half-float bits -> 8-bit display level
     static uint8_t* lut = NULL;
     if (!lut) {
