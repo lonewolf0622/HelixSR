@@ -1371,6 +1371,7 @@ static void RunDll(const char* name, int inpack, const char* base, const char* r
         snprintf(bs, sizeof(bs), "dlls\\%s\\%s", name, besides[b]);
         placed[b] = GetFileAttributesA(bs) != INVALID_FILE_ATTRIBUTES && CopyFileA(bs, besides[b], FALSE);
     }
+    DeleteFileA("hlx_fsr4.log");   // HelixSR: HLX FSR 4 Full's log of this run only (its route lines go to the diagnostics)
     printf("%s %s ...\n", name, what); fflush(stdout);
     snprintf(cmd, sizeof(cmd), "\"%s%s\" --run \"%s\" \"%s\"%s%s", base, child_exe, name, raw, quick ? " quick" : " full", all_presets ? " all" : "");
     STARTUPINFOA si = {.cb = sizeof(si)};
@@ -1402,6 +1403,21 @@ static void RunDll(const char* name, int inpack, const char* base, const char* r
         }
     }
     CloseHandle(pi.hProcess); CloseHandle(pi.hThread);
+    {   // HelixSR: HLX FSR 4 Full's route (its log next to the program): which GPU it saw, which kernels it took, what failed
+        FILE* lf = fopen("hlx_fsr4.log", "r");
+        FILE* rf = lf ? fopen(raw, "a") : NULL;
+        char ln[600];
+        int k = 0;
+        static const char* const keys[] = {"device ", "interop", "D3D12 forms", "INT8", "not a BC-250", "missing", "failed", "cannot",
+                                           "runtime table", "own runtime", "post:", "skipped", "not covered", "kernel "};
+        while (lf && rf && fgets(ln, sizeof(ln), lf) && k < 24) {
+            ln[strcspn(ln, "\r\n")] = 0;
+            for (int q = 0; q < (int)(sizeof(keys) / sizeof(*keys)); ++q)
+                if (strstr(ln, keys[q]) && !(q == 13 && !strstr(ln, "fail"))) { fprintf(rf, "X|%s|hlx_fsr4|0|%.400s\n", name, ln); ++k; break; }
+        }
+        if (rf) fclose(rf);
+        if (lf) fclose(lf);
+    }
     if (ngxCopy) HelixNgxCleanup(name);
     for (int b = 0; b < 2; ++b) if (placed[b]) DeleteFileA(besides[b]);
     fflush(stdout);
