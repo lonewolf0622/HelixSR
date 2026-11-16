@@ -73,7 +73,7 @@ Around them:
 ## New in 3.4.0
 
 - **HelixSR custom frame generation:** 2x up to 6x. On a BC-250 at 1080p about 2.6 ms for the generated frame of 2x and
-  5.7 ms for all three of 4x (its fast mode: in-between frames at half size, detail restored from the real frames).
+  5.7 ms for all three of 4x (its fastest mode, the default).
 - **HLX DLSS `DeepReuse`:** the deeper layers every second or fourth frame, up to about 23% faster.
 - **NVIDIA GTX 16:** HLX DLSS's 16-bit path with Turing shaders by default, and a new HLX FSR 4 version for GTX 16.
 - **Preset K on Windows is faster:** RX 6700 at 1080p 16-bit 5.1 -> 3.0 ms, 8-bit 3.2 -> 2.5 ms.
