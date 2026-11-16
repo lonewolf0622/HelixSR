@@ -26,7 +26,7 @@
 </p>
 
 <p align="center">
-  Windows &amp; Linux / Proton · Version 3.3.0 ·
+  Windows &amp; Linux / Proton · Version 3.4.0 ·
   <a href="LICENSE">HelixSR Freeware License</a>
 </p>
 
@@ -67,20 +67,18 @@ Around them:
 - **HelixSR Desktop**: sets HelixSR up once, installs, updates and removes it per game, and has a speed test.
 
 > [!NOTE]
-> **HelixSR 3.x has no frame generation of its own.** AMD FSR and Intel XeSS frame generation can be picked in HelixSR
-> Scaler's menu.
+> **HelixSR frame generation (new in 3.4.0):** HelixSR's own, 2x up to 6x, for games with DLSS Frame Generation (through
+> HelixSR Scaler). AMD FSR and Intel XeSS frame generation can still be picked in HelixSR Scaler's menu.
 
-## New in 3.3.0
+## New in 3.4.0
 
-- **HLX FSR 4 Full should work on more GPUs:** the BC-250 and RDNA 1 on Windows too, and RDNA 2 (RX 6000), RDNA 3 (RX 7000)
-  and the Steam Deck. Its BC-250 kernels are about 2.5% faster, and its files are half the size.
-- **HLX DLSS runs natively in Vulkan games** instead of through a DirectX 12 bridge.
-- **HLX FSR 4 in Vulkan games** through HelixSR Scaler.
-- **Preset K on Windows:** all of its layers run as DirectX 12 shaders now, and a new `Int8` setting uses 8-bit math on GPUs
-  with fast 8-bit dot products.
-- **NVIDIA GTX 10:** HLX DLSS and HLX FSR 4 are much faster under Linux / Proton (they now take the same 32-bit paths as on
-  Windows), and HLX DLSS's faster Quality output kernel runs over a wider range of resolutions.
-- HelixSR Scaler 2.3.0.
+- **HelixSR custom frame generation:** 2x up to 6x. On a BC-250 at 1080p about 2.6 ms for the generated frame of 2x and
+  5.7 ms for all three of 4x (its fast mode: in-between frames at half size, detail restored from the real frames).
+- **HLX DLSS `DeepReuse`:** the deeper layers every second or fourth frame, up to about 23% faster.
+- **NVIDIA GTX 16:** HLX DLSS's 16-bit path with Turing shaders by default, and a new HLX FSR 4 version for GTX 16.
+- **Preset K on Windows is faster:** RX 6700 at 1080p 16-bit 5.1 -> 3.0 ms, 8-bit 3.2 -> 2.5 ms.
+- **HLX FSR 4 Full for every RDNA card in one file**, with its own int8 kernels on RDNA 2 / 3 and the RX 5300 / 5500.
+- **Speed test:** times more paths, so each card can get the faster one.
 
 The full notes, including known issues, are in each release.
 
@@ -117,7 +115,7 @@ has a **speed test** (top bar).
 
 ### Setup scripts (without the app)
 
-1. Download `HelixSR-3.3.0.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
+1. Download `HelixSR-3.4.0.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
 2. Close your games and run the setup in that folder:
    - **Windows:** double-click `helixsr-setup.bat`
    - **Linux / Steam Deck:** `./helixsr-setup.sh` (in a terminal, or double-click and choose *Run in terminal*)
