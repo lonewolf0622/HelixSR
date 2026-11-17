@@ -26,7 +26,7 @@
 </p>
 
 <p align="center">
-  Windows &amp; Linux / Proton · Version 3.4.0 ·
+  Windows &amp; Linux / Proton · Version 3.4.1 ·
   <a href="LICENSE">HelixSR Freeware License</a>
 </p>
 
@@ -69,6 +69,13 @@ Around them:
 > [!NOTE]
 > **HelixSR frame generation (new in 3.4.0):** HelixSR's own, 2x up to 6x, for games with DLSS Frame Generation (through
 > HelixSR Scaler). AMD FSR and Intel XeSS frame generation can still be picked in HelixSR Scaler's menu.
+
+## New in 3.4.1
+
+- **HelixSR custom frame generation:** faster (BC-250 1080p: 2.1 ms for the generated frame of 2x, 3.2 ms for all three of
+  4x), less ghosting next to things that stay still on screen, up to 6x, Dynamic MFG, lower input latency.
+- **DeepReuse** can be set in OptiScaler.ini; HelixSR Scaler 2.3.1.
+- **Setup:** HLX DLSS's Vulkan shaders build much faster on Linux.
 
 ## New in 3.4.0
 
@@ -115,7 +122,7 @@ has a **speed test** (top bar).
 
 ### Setup scripts (without the app)
 
-1. Download `HelixSR-3.4.0.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
+1. Download `HelixSR-3.4.1.zip` and extract it into a folder you keep (for example `C:\HelixSR` or your home folder).
 2. Close your games and run the setup in that folder:
    - **Windows:** double-click `helixsr-setup.bat`
    - **Linux / Steam Deck:** `./helixsr-setup.sh` (in a terminal, or double-click and choose *Run in terminal*)
